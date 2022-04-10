@@ -40,7 +40,7 @@
 &lt;p&gt;The Golang handles command line arguments by using the flag package from the standard library.&lt;/p&gt;
 &lt;p&gt;Package flag implements command-line flag parsing&lt;/p&gt;
 &lt;/blockquote&gt;
-&lt;h3 id=&#34;a-few-notes&#34;&gt;A few notes.&lt;/h3&gt;
+&lt;h2 id=&#34;a-few-notes&#34;&gt;A few notes&lt;/h2&gt;
 &lt;p&gt;define the flags to be used in the command line by &lt;code&gt;flag.String()&lt;/code&gt;, &lt;code&gt;Bool()&lt;/code&gt;, &lt;code&gt;Int()&lt;/code&gt;, etc.&lt;/p&gt;
 &lt;ul&gt;
 &lt;li&gt;after defining the flag, call &lt;code&gt;flag.Parse()&lt;/code&gt; to parse the command line parameters.&lt;/li&gt;
