@@ -6,11 +6,11 @@
     <description>Recent content in golang on Golang island</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en</language>
-    <lastBuildDate>Sun, 28 Sep 2014 00:00:00 +0000</lastBuildDate><atom:link href="https://www.golangi.net/tags/golang/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Sun, 10 Apr 2022 00:00:00 +0000</lastBuildDate><atom:link href="https://www.golangi.net/tags/golang/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Command Line Usage of GoLang:flag package</title>
       <link>https://www.golangi.net/post/command-line-usage-of-golang_flag-package/</link>
-      <pubDate>Sun, 28 Sep 2014 00:00:00 +0000</pubDate>
+      <pubDate>Sun, 10 Apr 2022 00:00:00 +0000</pubDate>
       
       <guid>https://www.golangi.net/post/command-line-usage-of-golang_flag-package/</guid>
       <description>The Golang handles command line arguments by using the flag package from the standard library.
