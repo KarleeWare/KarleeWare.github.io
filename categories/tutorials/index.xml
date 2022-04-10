@@ -2,17 +2,17 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>tutorials on Golang island</title>
-    <link>http://localhost:1313/categories/tutorials/</link>
+    <link>https://www.golangi.net/categories/tutorials/</link>
     <description>Recent content in tutorials on Golang island</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en</language>
-    <lastBuildDate>Sun, 28 Sep 2014 00:00:00 +0000</lastBuildDate><atom:link href="http://localhost:1313/categories/tutorials/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Sun, 28 Sep 2014 00:00:00 +0000</lastBuildDate><atom:link href="https://www.golangi.net/categories/tutorials/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Command Line Usage of GoLang:flag package</title>
-      <link>http://localhost:1313/post/command-line-usage-of-golang_flag-package/</link>
+      <link>https://www.golangi.net/post/command-line-usage-of-golang_flag-package/</link>
       <pubDate>Sun, 28 Sep 2014 00:00:00 +0000</pubDate>
       
-      <guid>http://localhost:1313/post/command-line-usage-of-golang_flag-package/</guid>
+      <guid>https://www.golangi.net/post/command-line-usage-of-golang_flag-package/</guid>
       <description>The Golang handles command line arguments by using the flag package from the standard library.
 Package flag implements command-line flag parsing
  A few notes.   define the flags to be used in the command line by flag.String(), Bool(), Int(), etc. after defining the flag, call flag.Parse() to parse the command line parameters. the format of command line arguments can be  use  -flag xxx (use spaces, a - sign) --flag xxx (use space, two - symbols) --flag=xxx (use equal sign, one - sign) --flag=xxx (using an equal sign, two - signs) Where parameters of boolean type prevent ambiguity in parsing and should be specified using an equal sign.</description>
