@@ -6,15 +6,27 @@
     <description>Recent content in Posts on Golang island</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en</language>
-    <lastBuildDate>Sun, 10 Apr 2022 00:00:00 +0000</lastBuildDate><atom:link href="https://www.golangi.net/post/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Mon, 11 Apr 2022 00:00:00 +0000</lastBuildDate><atom:link href="https://www.golangi.net/post/index.xml" rel="self" type="application/rss+xml" />
     <item>
-      <title>Command Line Usage of GoLang:flag package</title>
+      <title>A few must-have Golang tricks</title>
+      <link>https://www.golangi.net/post/a-few-must-have-golang-tricks/</link>
+      <pubDate>Mon, 11 Apr 2022 00:00:00 +0000</pubDate>
+      
+      <guid>https://www.golangi.net/post/a-few-must-have-golang-tricks/</guid>
+      <description>Go is a very good programming language. It is a language that allows you to really focus on your business and not have to worry too much about the program itself, so you can write applications as quickly as possible. For example, it has a relatively complete ecosystem that can provide you with everything you need to get started.
+But then, it&amp;rsquo;s not a panacea, and there are some things we need to be aware of.</description>
+    </item>
+    
+    <item>
+      <title>Command Line Usage of GoLang-flag package</title>
       <link>https://www.golangi.net/post/command-line-usage-of-golang_flag-package/</link>
       <pubDate>Sun, 10 Apr 2022 00:00:00 +0000</pubDate>
       
       <guid>https://www.golangi.net/post/command-line-usage-of-golang_flag-package/</guid>
       <description>The Golang handles command line arguments by using the flag package from the standard library.
 Package flag implements command-line flag parsing
+http://golang.org/pkg/flag/
+http://golang.org/pkg/
  A few notes define the flags to be used in the command line by flag.String(), Bool(), Int(), etc.
  after defining the flag, call flag.Parse() to parse the command line parameters. the format of command line arguments can be  use Where parameters of boolean type prevent ambiguity in parsing and should be specified using an equal sign.</description>
     </item>
