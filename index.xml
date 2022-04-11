@@ -6,16 +6,27 @@
     <description>Recent content on Golang island</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en</language>
-    <lastBuildDate>Mon, 11 Apr 2022 00:00:00 +0000</lastBuildDate><atom:link href="https://www.golangi.net/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Mon, 11 Apr 2022 00:00:00 +0000</lastBuildDate>
+    
+        <atom:link href="https://www.golangi.net/index.xml" rel="self" type="application/rss+xml" />
+    
+    
     <item>
       <title>About</title>
       <link>https://www.golangi.net/about/</link>
       <pubDate>Sat, 09 Apr 2022 00:00:00 +0000</pubDate>
       
       <guid>https://www.golangi.net/about/</guid>
-      <description>Share everything about Golang!
- Some of the content is collected from the Internet, and we apologize if it inadvertently infringes on your copyright. Please contact us. We will remove it.
- official  https://go.dev/</description>
+      
+        <description>&lt;p&gt;Share everything about &lt;strong&gt;Golang&lt;/strong&gt;!&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;Some of the content is collected from the Internet, and we apologize if it inadvertently infringes on your copyright. Please contact us. We will remove it.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h3 id=&#34;official&#34;&gt;official&lt;/h3&gt;
+&lt;hr&gt;
+&lt;p&gt;&lt;a href=&#34;https://go.dev/&#34;&gt;https://go.dev/&lt;/a&gt;&lt;/p&gt;
+</description>
+      
     </item>
     
     <item>
@@ -24,8 +35,58 @@
       <pubDate>Mon, 11 Apr 2022 00:00:00 +0000</pubDate>
       
       <guid>https://www.golangi.net/post/a-few-must-have-golang-tricks/</guid>
-      <description>Go is a very good programming language. It is a language that allows you to really focus on your business and not have to worry too much about the program itself, so you can write applications as quickly as possible. For example, it has a relatively complete ecosystem that can provide you with everything you need to get started.
-But then, it&amp;rsquo;s not a panacea, and there are some things we need to be aware of.</description>
+      
+        <description>&lt;blockquote&gt;
+&lt;p&gt;Go is a very good programming language. It is a language that allows you to really focus on your business and not have to worry too much about the program itself, so you can write applications as quickly as possible. For example, it has a relatively complete ecosystem that can provide you with everything you need to get started.&lt;/p&gt;
+&lt;p&gt;But then, it&amp;rsquo;s not a panacea, and there are some things we need to be aware of. I&amp;rsquo;m writing this article mainly as a reminder to myself, and also as some observations and summaries. Of course, these are just tips, not real problems, but of course if you notice them and use them in the real world, then it will benefit you a lot, which is the difference between a newbie and a veteran.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h2 id=&#34;do-not-use-logrus&#34;&gt;Do not use Logrus&lt;/h2&gt;
+&lt;p&gt;This is actually related to generics. Because Go is a strongly typed static language, you can&amp;rsquo;t bypass data types like you can with NodeJS or PHP. So what if we still need to use generic types? Like Loger, for example, or ORM, because the only way to write generic code is to use generic types, otherwise you&amp;rsquo;d have to write each one once.&lt;/p&gt;
+&lt;p&gt;In the end, we have to use reflection. &lt;strong&gt;And Logrus makes heavy use of reflection&lt;/strong&gt;, which leads to a lot of allocation counts. While not usually a big problem (depending on the code), performance is important, especially in large scale, highly concurrent projects. While this may sound like a very minor optimization, it is important to avoid reflections. If you see code that can use structure regardless of type, it will use reflection and have a performance impact.&lt;/p&gt;
+&lt;p&gt;For example, Logrus doesn&amp;rsquo;t care about types, but obviously Go needs to know (eventually).What does Logrus do? Use reflection to detect types, which is overhead.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;2
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;3
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-go&#34; data-lang=&#34;go&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;  &lt;span class=&#34;nx&#34;&gt;log&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;nf&#34;&gt;WithFields&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;log&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;Fields&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;{&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;    &lt;span class=&#34;s&#34;&gt;&amp;#34;animal&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;myWhatever&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;  &lt;span class=&#34;p&#34;&gt;}).&lt;/span&gt;&lt;span class=&#34;nf&#34;&gt;Info&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;&amp;#34;A walrus appears&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;So I would prefer &lt;strong&gt;zerolog&lt;/strong&gt;, but of course zap is good too. Both claim zero allocation, which is what we want, since they have the least performance impact.&lt;/p&gt;
+&lt;h2 id=&#34;do-not-use-encodingjson&#34;&gt;Do not use encoding/json&lt;/h2&gt;
+&lt;p&gt;When we need a function, function, many people suggest using the standard library. The exception is the encoding/json module in the standard library. In fact, like the example above, encoding/json uses reflection, which can lead to poor performance and losses when writing APIs that return json responses, or microservices.&lt;/p&gt;
+&lt;p&gt;You can use Easyjson, for example, which is simple and efficient, and uses a code generator to create the code needed to convert the structure to json to minimize distribution. This is a manual build step and is annoying. Interestingly json-iterator also uses reflection, but is significantly faster and I suspect black magic.&lt;/p&gt;
+&lt;h2 id=&#34;do-not-use-closures-in-goroutines-if-possible&#34;&gt;Do not use closures in goroutines if possible&lt;/h2&gt;
+&lt;p&gt;For example, the following sample code&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;2
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;3
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;4
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;5
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-go&#34; data-lang=&#34;go&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;k&#34;&gt;for&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;i&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;:=&lt;/span&gt;&lt;span class=&#34;mi&#34;&gt;0&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;;&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;i&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&#34;mi&#34;&gt;10&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;;&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;i&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;++&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;{&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;  &lt;span class=&#34;k&#34;&gt;go&lt;/span&gt; &lt;span class=&#34;kd&#34;&gt;func&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;()&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;{&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;     &lt;span class=&#34;nx&#34;&gt;fmt&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;nf&#34;&gt;Println&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;i&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;  &lt;span class=&#34;p&#34;&gt;}()&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;p&#34;&gt;}&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;Most people probably expect this to print the numbers 0 through 9, just like when delegating the task to goroutine.&lt;/p&gt;
+&lt;p&gt;But the actual result: depending on the system, you will get one or two numbers and many 10s.&lt;/p&gt;
+&lt;p&gt;Why is this? Closures have access to the parent scope, so you can use variables directly. Although updated linters may warn you about &amp;ldquo;variable closure capture&amp;rdquo;, they do not require you to redeclare the variable.&lt;/p&gt;
+&lt;p&gt;Go&amp;rsquo;s reputation for performance owes much to the execution of runtime optimizations, which try to &amp;ldquo;guess&amp;rdquo; what you want to do and optimize certain execution paths. During this time, it &amp;ldquo;captures&amp;rdquo; variables and passes them to where they are needed in the most theoretically efficient way possible (for example, after completing some non-concurrent operation to free up some CPU allocations). The result in this case is that the loop may start goroutines, and the goroutines may receive the value of i from the parent scope much later. There is no guarantee which one you will see on multiple executions of this code, it could be the number 10 or some other number.&lt;/p&gt;
+&lt;p&gt;If you do use a closure for some reason, be sure to pass the variable i and treat the closure as you would every function.&lt;/p&gt;
+&lt;h2 id=&#34;summary&#34;&gt;Summary&lt;/h2&gt;
+&lt;p&gt;&lt;strong&gt;There are definitely more than these three techniques in programming practice. Figuring them out and mastering them in practice will improve our programming skills and allow us to write more optimized code.&lt;/strong&gt;&lt;/p&gt;
+</description>
+      
     </item>
     
     <item>
@@ -34,12 +95,116 @@ But then, it&amp;rsquo;s not a panacea, and there are some things we need to be 
       <pubDate>Sun, 10 Apr 2022 00:00:00 +0000</pubDate>
       
       <guid>https://www.golangi.net/post/command-line-usage-of-golang_flag-package/</guid>
-      <description>The Golang handles command line arguments by using the flag package from the standard library.
-Package flag implements command-line flag parsing
-http://golang.org/pkg/flag/
-http://golang.org/pkg/
- A few notes define the flags to be used in the command line by flag.String(), Bool(), Int(), etc.
- after defining the flag, call flag.Parse() to parse the command line parameters. the format of command line arguments can be  use Where parameters of boolean type prevent ambiguity in parsing and should be specified using an equal sign.</description>
+      
+        <description>&lt;blockquote&gt;
+&lt;p&gt;The Golang handles command line arguments by using the flag package from the standard library.&lt;/p&gt;
+&lt;p&gt;Package flag implements command-line flag parsing&lt;/p&gt;
+&lt;p&gt;&lt;a href=&#34;http://golang.org/pkg/flag/&#34;&gt;http://golang.org/pkg/flag/&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&lt;a href=&#34;http://golang.org/pkg/&#34;&gt;http://golang.org/pkg/&lt;/a&gt;&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h2 id=&#34;a-few-notes&#34;&gt;A few notes&lt;/h2&gt;
+&lt;p&gt;define the flags to be used in the command line by &lt;code&gt;flag.String()&lt;/code&gt;, &lt;code&gt;Bool()&lt;/code&gt;, &lt;code&gt;Int()&lt;/code&gt;, etc.&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;after defining the flag, call &lt;code&gt;flag.Parse()&lt;/code&gt; to parse the command line parameters.&lt;/li&gt;
+&lt;li&gt;the format of command line arguments can be&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;use&#34;&gt;use&lt;/h2&gt;
+&lt;p&gt;&lt;strong&gt;Where parameters of boolean type prevent ambiguity in parsing and should be specified using an equal sign.&lt;/strong&gt;&lt;/p&gt;
+&lt;h2 id=&#34;test-cases&#34;&gt;Test cases&lt;/h2&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt; 1
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 2
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 3
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 4
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 5
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 6
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 7
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 8
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 9
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;10
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;11
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;12
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;13
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;14
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;15
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;16
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;17
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;18
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;19
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;20
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;21
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;22
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;23
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;24
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;25
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;26
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;27
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;28
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;29
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;30
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;31
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;32
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;33
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;34
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;35
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;36
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;37
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;38
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;39
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;40
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;41
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;42
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;43
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-go&#34; data-lang=&#34;go&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;kn&#34;&gt;package&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;main&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt; 
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;kn&#34;&gt;import&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;    &lt;span class=&#34;s&#34;&gt;&amp;#34;flag&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;    &lt;span class=&#34;s&#34;&gt;&amp;#34;fmt&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt; 
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;kd&#34;&gt;var&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;Input_pstrName&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;flag&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;nf&#34;&gt;String&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;&amp;#34;name&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;s&#34;&gt;&amp;#34;gerry&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;s&#34;&gt;&amp;#34;input ur name&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;kd&#34;&gt;var&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;Input_piAge&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;flag&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;nf&#34;&gt;Int&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;&amp;#34;age&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;mi&#34;&gt;20&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;s&#34;&gt;&amp;#34;input ur age&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;kd&#34;&gt;var&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;Input_flagvar&lt;/span&gt; &lt;span class=&#34;kt&#34;&gt;int&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt; 
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;kd&#34;&gt;func&lt;/span&gt; &lt;span class=&#34;nf&#34;&gt;Init&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;()&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;{&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;    &lt;span class=&#34;nx&#34;&gt;flag&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;nf&#34;&gt;IntVar&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;&amp;amp;&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;Input_flagvar&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;s&#34;&gt;&amp;#34;flagname&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;mi&#34;&gt;1234&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;s&#34;&gt;&amp;#34;help message for flagname&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;p&#34;&gt;}&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt; 
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;kd&#34;&gt;func&lt;/span&gt; &lt;span class=&#34;nf&#34;&gt;main&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;()&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;{&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;    &lt;span class=&#34;nf&#34;&gt;Init&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;()&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;    &lt;span class=&#34;nx&#34;&gt;flag&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;nf&#34;&gt;Parse&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;()&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt; 
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;    &lt;span class=&#34;c1&#34;&gt;// After parsing, the arguments after the flag are available as the slice flag.Args() or individually as flag.Arg(i). The arguments are indexed from 0 through flag.NArg()-1
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;c1&#34;&gt;&lt;/span&gt;    &lt;span class=&#34;c1&#34;&gt;// Args returns the non-flag command-line arguments
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;c1&#34;&gt;&lt;/span&gt;    &lt;span class=&#34;c1&#34;&gt;// NArg is the number of arguments remaining after flags have been processed
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;c1&#34;&gt;&lt;/span&gt;    &lt;span class=&#34;nx&#34;&gt;fmt&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;nf&#34;&gt;Printf&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;&amp;#34;args=%s, num=%d\n&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;flag&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;nf&#34;&gt;Args&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(),&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;flag&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;nf&#34;&gt;NArg&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;())&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;    &lt;span class=&#34;k&#34;&gt;for&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;i&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;:=&lt;/span&gt; &lt;span class=&#34;mi&#34;&gt;0&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;;&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;i&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;!=&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;flag&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;nf&#34;&gt;NArg&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;();&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;i&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;++&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;{&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;        &lt;span class=&#34;nx&#34;&gt;fmt&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;nf&#34;&gt;Printf&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;&amp;#34;arg[%d]=%s\n&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;i&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;flag&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;nf&#34;&gt;Arg&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;i&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;))&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;    &lt;span class=&#34;p&#34;&gt;}&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt; 
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;    &lt;span class=&#34;nx&#34;&gt;fmt&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;nf&#34;&gt;Println&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;&amp;#34;name=&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;*&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;Input_pstrName&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;    &lt;span class=&#34;nx&#34;&gt;fmt&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;nf&#34;&gt;Println&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;&amp;#34;age=&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;*&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;Input_piAge&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;    &lt;span class=&#34;nx&#34;&gt;fmt&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;nf&#34;&gt;Println&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;&amp;#34;flagname=&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;Input_flagvar&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;p&#34;&gt;}&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt; 
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;cm&#34;&gt;/*
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;cm&#34;&gt;output:
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;cm&#34;&gt;mba:filter gerryyang$ ./test_flag --name &amp;#34;aaa&amp;#34; -age=123 -flagname=0x11 para1 para2 para3
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;cm&#34;&gt;args=[para1 para2 para3], num=3
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;cm&#34;&gt;arg[0]=para1
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;cm&#34;&gt;arg[1]=para2
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;cm&#34;&gt;arg[2]=para3
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;cm&#34;&gt;name= aaa
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;cm&#34;&gt;age= 123
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;cm&#34;&gt;flagname= 17
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;cm&#34;&gt;*/&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;</description>
+      
     </item>
     
   </channel>
