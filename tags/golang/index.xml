@@ -6,7 +6,17 @@
     <description>Recent content in golang on Golang island</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en</language>
-    <lastBuildDate>Mon, 11 Apr 2022 00:00:00 +0000</lastBuildDate><atom:link href="https://www.golangi.net/tags/golang/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Tue, 12 Apr 2022 00:00:00 +0000</lastBuildDate><atom:link href="https://www.golangi.net/tags/golang/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>How to use go-humanize</title>
+      <link>https://www.golangi.net/post/how-to-use-go-humanize/</link>
+      <pubDate>Tue, 12 Apr 2022 00:00:00 +0000</pubDate>
+      
+      <guid>https://www.golangi.net/post/how-to-use-go-humanize/</guid>
+      <description>Late at night, I will open the computer and study some open source projects, not recently in the research found an open source project to use a very good Go language library: go-humanize.
+This is a &amp;ldquo;humanize&amp;rdquo; Go language library, the meaning of humanize is not to describe the Go language library, but the Go language library to achieve the function, it can convert the number, time, capacity, etc. into our human easy to understand words, such as the capacity of the hard disk is 82854982 bytes, we can not understand very well, but if the capacity is 83M, then it is good to understand, go-humanize does this thing.</description>
+    </item>
+    
     <item>
       <title>A few must-have Golang tricks</title>
       <link>https://www.golangi.net/post/a-few-must-have-golang-tricks/</link>
