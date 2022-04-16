@@ -6,7 +6,18 @@
     <description>Recent content in tutorials on Golang island</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en</language>
-    <lastBuildDate>Tue, 12 Apr 2022 00:00:00 +0000</lastBuildDate><atom:link href="https://www.golangi.net/categories/tutorials/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Sat, 16 Apr 2022 00:00:00 +0000</lastBuildDate><atom:link href="https://www.golangi.net/categories/tutorials/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Error interface and error handling</title>
+      <link>https://www.golangi.net/post/error-interface-and-error-handling/</link>
+      <pubDate>Sat, 16 Apr 2022 00:00:00 +0000</pubDate>
+      
+      <guid>https://www.golangi.net/post/error-interface-and-error-handling/</guid>
+      <description>Error handling in the Go language is not quite the same as in other languages. It treats errors as a value. There is more emphasis on determining errors and handling them, rather than catching them directly with a catch
+ Error interface The Go language treats errors as a special value and does not support the use of try/catch to catch exceptions.
+The Go language uses an interface called error to represent error types.</description>
+    </item>
+    
     <item>
       <title>How to use go-humanize</title>
       <link>https://www.golangi.net/post/how-to-use-go-humanize/</link>
