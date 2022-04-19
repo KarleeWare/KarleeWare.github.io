@@ -10,48 +10,55 @@
   
   <url>
     <loc>https://www.golangi.net/categories/</loc>
-    <lastmod>2022-04-16T00:00:00+00:00</lastmod>
+    <lastmod>2022-04-19T00:00:00+00:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.5</priority>
   </url>
   
   <url>
-    <loc>https://www.golangi.net/post/error-interface-and-error-handling/</loc>
-    <lastmod>2022-04-16T00:00:00+00:00</lastmod>
+    <loc>https://www.golangi.net/post/gin-uses-joniter-to-bind-the-json-request-body/</loc>
+    <lastmod>2022-04-19T00:00:00+00:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.5</priority>
   </url>
   
   <url>
     <loc>https://www.golangi.net/tags/golang/</loc>
-    <lastmod>2022-04-16T00:00:00+00:00</lastmod>
+    <lastmod>2022-04-19T00:00:00+00:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.5</priority>
   </url>
   
   <url>
     <loc>https://www.golangi.net/</loc>
-    <lastmod>2022-04-16T00:00:00+00:00</lastmod>
+    <lastmod>2022-04-19T00:00:00+00:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.5</priority>
   </url>
   
   <url>
     <loc>https://www.golangi.net/post/</loc>
-    <lastmod>2022-04-16T00:00:00+00:00</lastmod>
+    <lastmod>2022-04-19T00:00:00+00:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.5</priority>
   </url>
   
   <url>
     <loc>https://www.golangi.net/tags/</loc>
-    <lastmod>2022-04-16T00:00:00+00:00</lastmod>
+    <lastmod>2022-04-19T00:00:00+00:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.5</priority>
   </url>
   
   <url>
     <loc>https://www.golangi.net/categories/tutorials/</loc>
+    <lastmod>2022-04-19T00:00:00+00:00</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.5</priority>
+  </url>
+  
+  <url>
+    <loc>https://www.golangi.net/post/error-interface-and-error-handling/</loc>
     <lastmod>2022-04-16T00:00:00+00:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.5</priority>
