@@ -40,7 +40,7 @@
 &lt;p&gt;In the Gin framework, the standard package &lt;code&gt;encoding/json&lt;/code&gt; is used by default when handling parameter bindings in JSON format, however, the standard package cannot meet some of our requirements, such as compatibility with integers, strings, PHP null arrays, time formats, etc.&lt;/p&gt;
 &lt;/blockquote&gt;
 &lt;h2 id=&#34;the-easiest-way&#34;&gt;The easiest way&lt;/h2&gt;
-&lt;p&gt;When developing the API, you need to use **ShouldBindJSON **to bind the incoming parameters to the structure.&lt;/p&gt;
+&lt;p&gt;When developing the API, you need to use &lt;code&gt;ShouldBindJSON&lt;/code&gt; to bind the incoming parameters to the structure.&lt;/p&gt;
 &lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
 &lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
 &lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
