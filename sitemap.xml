@@ -2,13 +2,6 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
-    <loc>https://www.golangi.net/about/</loc>
-    <lastmod>2022-04-09T00:00:00+00:00</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.5</priority>
-  </url>
-  
-  <url>
     <loc>https://www.golangi.net/categories/</loc>
     <lastmod>2022-04-19T00:00:00+00:00</lastmod>
     <changefreq>weekly</changefreq>
@@ -81,6 +74,13 @@
   <url>
     <loc>https://www.golangi.net/post/command-line-usage-of-golang_flag-package/</loc>
     <lastmod>2022-04-10T00:00:00+00:00</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.5</priority>
+  </url>
+  
+  <url>
+    <loc>https://www.golangi.net/about/</loc>
+    <lastmod>2022-04-09T00:00:00+00:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.5</priority>
   </url>
