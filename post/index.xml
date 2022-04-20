@@ -6,7 +6,20 @@
     <description>Recent content in Posts on Golang island</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en</language>
-    <lastBuildDate>Tue, 19 Apr 2022 00:00:00 +0000</lastBuildDate><atom:link href="https://www.golangi.net/post/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Wed, 20 Apr 2022 00:00:00 +0000</lastBuildDate><atom:link href="https://www.golangi.net/post/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Go Mod Import Local Packages</title>
+      <link>https://www.golangi.net/post/go-mod-import-local-packages/</link>
+      <pubDate>Wed, 20 Apr 2022 00:00:00 +0000</pubDate>
+      
+      <guid>https://www.golangi.net/post/go-mod-import-local-packages/</guid>
+      <description>For a project, it is not possible to write all the code yourself.
+So it involves bringing in other people&amp;rsquo;s code and effectively avoiding duplicating the wheel, which is also called package introduction in Go.
+After the birth of the Go language, there has been no official package management tool for many upgrades.
+It was only in version 1.11 that go module, the official management tool, appeared.
+So now most of the new Go projects are using go module for package management.</description>
+    </item>
+    
     <item>
       <title>Gin Uses Joniter to Bind the Json Request Body</title>
       <link>https://www.golangi.net/post/gin-uses-joniter-to-bind-the-json-request-body/</link>

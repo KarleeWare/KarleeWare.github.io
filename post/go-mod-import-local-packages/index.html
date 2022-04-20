@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <title>Error interface and error handling - Golang island</title>
+  <title>Go Mod Import Local Packages - Golang island</title>
   
 
 <meta name="renderer" content="webkit" />
@@ -22,8 +22,8 @@
 
 <meta name="mobile-web-app-capable" content="yes">
 
-<meta name="author" content="Golang island" /><meta name="description" content="Error interface and error handling" />
-<meta name="keywords" content="golang, error, interface, OpError, target, handling" />
+<meta name="author" content="Golang island" /><meta name="description" content="How Golang imports local packages using Go Mod" />
+<meta name="keywords" content="golang, package, mod, import, local" />
 
 
 
@@ -34,7 +34,7 @@
 <meta name="generator" content="Hugo 0.96.0" />
 
 
-<link rel="canonical" href="https://www.golangi.net/post/error-interface-and-error-handling/" />
+<link rel="canonical" href="https://www.golangi.net/post/go-mod-import-local-packages/" />
 
 
 
@@ -58,20 +58,20 @@
 
 
 
-<meta property="og:title" content="Error interface and error handling" />
-<meta property="og:description" content="Error interface and error handling" />
+<meta property="og:title" content="Go Mod Import Local Packages" />
+<meta property="og:description" content="How Golang imports local packages using Go Mod" />
 <meta property="og:type" content="article" />
-<meta property="og:url" content="https://www.golangi.net/post/error-interface-and-error-handling/" /><meta property="article:section" content="post" />
-<meta property="article:published_time" content="2022-04-16T00:00:00+00:00" />
-<meta property="article:modified_time" content="2022-04-16T00:00:00+00:00" />
+<meta property="og:url" content="https://www.golangi.net/post/go-mod-import-local-packages/" /><meta property="article:section" content="post" />
+<meta property="article:published_time" content="2022-04-20T00:00:00+00:00" />
+<meta property="article:modified_time" content="2022-04-20T00:00:00+00:00" />
 
-<meta itemprop="name" content="Error interface and error handling">
-<meta itemprop="description" content="Error interface and error handling"><meta itemprop="datePublished" content="2022-04-16T00:00:00+00:00" />
-<meta itemprop="dateModified" content="2022-04-16T00:00:00+00:00" />
-<meta itemprop="wordCount" content="543">
+<meta itemprop="name" content="Go Mod Import Local Packages">
+<meta itemprop="description" content="How Golang imports local packages using Go Mod"><meta itemprop="datePublished" content="2022-04-20T00:00:00+00:00" />
+<meta itemprop="dateModified" content="2022-04-20T00:00:00+00:00" />
+<meta itemprop="wordCount" content="549">
 <meta itemprop="keywords" content="golang," /><meta name="twitter:card" content="summary"/>
-<meta name="twitter:title" content="Error interface and error handling"/>
-<meta name="twitter:description" content="Error interface and error handling"/>
+<meta name="twitter:title" content="Go Mod Import Local Packages"/>
+<meta name="twitter:description" content="How Golang imports local packages using Go Mod"/>
 
 <!--[if lte IE 9]>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
@@ -301,17 +301,17 @@
           <article class="post bg-white">
     
     <header class="post-header">
-      <h1 class="post-title">Error interface and error handling</h1>
+      <h1 class="post-title">Go Mod Import Local Packages</h1>
       
       <div class="post-meta">
-        <time datetime="2022-04-16" class="post-time">
-          2022-04-16
+        <time datetime="2022-04-20" class="post-time">
+          2022-04-20
         </time>
         <div class="post-category">
             <a href="https://www.golangi.net/categories/tutorials/"> tutorials </a>
             
           </div>
-        <span class="more-meta"> 543 words </span>
+        <span class="more-meta"> 549 words </span>
           <span class="more-meta"> 3 min read </span>
 
         
@@ -329,10 +329,8 @@
   <div class="post-toc-content">
     <nav id="TableOfContents">
   <ul>
-    <li><a href="#error-interface">Error interface</a></li>
-    <li><a href="#create-error">Create Error</a></li>
-    <li><a href="#fmterrorf">fmt.Errorf</a></li>
-    <li><a href="#error-structure-type">Error structure type</a></li>
+    <li><a href="#import-packages-under-the-same-project">import packages under the same project</a></li>
+    <li><a href="#not-under-the-same-project">Not under the same project</a></li>
   </ul>
 </nav>
   </div>
@@ -341,67 +339,17 @@
     
     <div class="post-content">
       <blockquote>
-<p>Error handling in the Go language is not quite the same as in other languages. It treats errors as a value. There is more emphasis on determining errors and handling them, rather than catching them directly with a catch</p>
+<p>For a project, it is not possible to write all the code yourself.</p>
+<p>So it involves bringing in other people&rsquo;s code and effectively avoiding duplicating the wheel, which is also called package introduction in Go.</p>
+<p>After the birth of the Go language, there has been no official package management tool for many upgrades.</p>
+<p><strong>It was only in version 1.11 that <code>go module</code>, the official management tool, appeared.</strong></p>
+<p>So now most of the new Go projects are using go module for package management.</p>
+<p>We use <code>go module</code> a lot to bring in packages from Github, just <code>go get</code>.</p>
+<p>But how to import local packages?</p>
 </blockquote>
-<h2 id="error-interface">Error interface</h2>
-<p>The Go language treats errors as a special value and does not support the use of <code>try/catch</code> to catch exceptions.</p>
-<p>The Go language uses an interface called error to represent error types.</p>
-<div class="highlight"><div class="chroma">
-<table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt">1
-</span><span class="lnt">2
-</span><span class="lnt">3
-</span></code></pre></td>
-<td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-go" data-lang="go"><span class="line"><span class="cl"><span class="kd">type</span> <span class="kt">error</span> <span class="kd">interface</span> <span class="p">{</span>
-</span></span><span class="line"><span class="cl">    <span class="nf">Error</span><span class="p">()</span> <span class="kt">string</span>
-</span></span><span class="line"><span class="cl"><span class="p">}</span>
-</span></span></code></pre></td></tr></table>
-</div>
-</div><p>The error interface contains only one method - <code>Error()</code> - and this function needs to return a string describing the error message.</p>
-<p>When a function or method needs to return an error, we usually use the error as the last return value. For example, the following function in the standard library <code>os </code>opens a file.</p>
-<div class="highlight"><div class="chroma">
-<table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt">1
-</span><span class="lnt">2
-</span><span class="lnt">3
-</span></code></pre></td>
-<td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-go" data-lang="go"><span class="line"><span class="cl"><span class="kd">func</span> <span class="nf">Open</span><span class="p">(</span><span class="nx">name</span> <span class="kt">string</span><span class="p">)</span> <span class="p">(</span><span class="o">*</span><span class="nx">File</span><span class="p">,</span> <span class="kt">error</span><span class="p">)</span> <span class="p">{</span>
-</span></span><span class="line"><span class="cl">	<span class="k">return</span> <span class="nf">OpenFile</span><span class="p">(</span><span class="nx">name</span><span class="p">,</span> <span class="nx">O_RDONLY</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
-</span></span><span class="line"><span class="cl"><span class="p">}</span>
-</span></span></code></pre></td></tr></table>
-</div>
-</div><p>Since <code>error </code>is an interface type with a default zero value of <code>nil</code>, we usually compare the error returned by a function call with <code>nil </code>to determine whether the function returned an error. For example, you will often see error code like the one below.</p>
-<div class="highlight"><div class="chroma">
-<table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt">1
-</span><span class="lnt">2
-</span><span class="lnt">3
-</span><span class="lnt">4
-</span><span class="lnt">5
-</span></code></pre></td>
-<td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-go" data-lang="go"><span class="line"><span class="cl"><span class="nx">file</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">os</span><span class="p">.</span><span class="nf">Open</span><span class="p">(</span><span class="s">&#34;./xx.go&#34;</span><span class="p">)</span>
-</span></span><span class="line"><span class="cl"><span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
-</span></span><span class="line"><span class="cl">	<span class="nx">fmt</span><span class="p">.</span><span class="nf">Println</span><span class="p">(</span><span class="s">&#34;open file failure, err:&#34;</span><span class="p">,</span> <span class="nx">err</span><span class="p">)</span>
-</span></span><span class="line"><span class="cl">	<span class="k">return</span>
-</span></span><span class="line"><span class="cl"><span class="p">}</span>
-</span></span></code></pre></td></tr></table>
-</div>
-</div><p><strong>Notion</strong></p>
-<p>When we use the <code>fmt </code>package to print an error, the Error method of type error is automatically called, which means that a description of the error is printed.</p>
-<h2 id="create-error">Create Error</h2>
-<p>The easiest way to customize error is to use the <code>New </code> function provided by the <code>errors</code> package to create an error.</p>
-<div class="highlight"><div class="chroma">
-<table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt">1
-</span></code></pre></td>
-<td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-go" data-lang="go"><span class="line"><span class="cl"><span class="kd">func</span> <span class="nf">New</span><span class="p">(</span><span class="nx">text</span> <span class="kt">string</span><span class="p">)</span> <span class="kt">error</span>
-</span></span></code></pre></td></tr></table>
-</div>
-</div><p>It takes a string argument to return an error containing that string. We can quickly create an error when the function returns.</p>
+<h2 id="import-packages-under-the-same-project">import packages under the same project</h2>
+<p>In practice, this is the most common scenario we see in development.</p>
+<p>Usually we build many packages under the project&rsquo;s directory, and they don&rsquo;t conflict, like in the following structure: <code>instance</code>, <code>island-package</code>.</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt">1
@@ -413,45 +361,16 @@
 </span><span class="lnt">7
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-go" data-lang="go"><span class="line"><span class="cl"><span class="kd">func</span> <span class="nf">queryById</span><span class="p">(</span><span class="nx">id</span> <span class="kt">int64</span><span class="p">)</span> <span class="p">(</span><span class="o">*</span><span class="nx">Info</span><span class="p">,</span> <span class="kt">error</span><span class="p">)</span> <span class="p">{</span>
-</span></span><span class="line"><span class="cl">	<span class="k">if</span> <span class="nx">id</span> <span class="o">&lt;=</span> <span class="mi">0</span> <span class="p">{</span>
-</span></span><span class="line"><span class="cl">		<span class="k">return</span> <span class="kc">nil</span><span class="p">,</span> <span class="nx">errors</span><span class="p">.</span><span class="nf">New</span><span class="p">(</span><span class="s">&#34;Invalid id&#34;</span><span class="p">)</span>
-</span></span><span class="line"><span class="cl">	<span class="p">}</span>
-</span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl">	<span class="c1">// ...
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="p">}</span>
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">.
+</span></span><span class="line"><span class="cl">├── main.go
+</span></span><span class="line"><span class="cl">├── go.mod
+</span></span><span class="line"><span class="cl">├── instance
+</span></span><span class="line"><span class="cl">│   └── UserInstance.go
+</span></span><span class="line"><span class="cl">└── island-package
+</span></span><span class="line"><span class="cl">    └── Hello.go
 </span></span></code></pre></td></tr></table>
 </div>
-</div><p>Or it can be used to define an error variable, for example the standard library <code> io.EOF</code> error is defined as follows.</p>
-<div class="highlight"><div class="chroma">
-<table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt">1
-</span></code></pre></td>
-<td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-go" data-lang="go"><span class="line"><span class="cl"><span class="kd">var</span> <span class="nx">EOF</span> <span class="p">=</span> <span class="nx">errors</span><span class="p">.</span><span class="nf">New</span><span class="p">(</span><span class="s">&#34;EOF&#34;</span><span class="p">)</span>
-</span></span></code></pre></td></tr></table>
-</div>
-</div><h2 id="fmterrorf">fmt.Errorf</h2>
-<p>When we need to pass in formatted error description information, using <code>fmt.Errorf</code> is a better choice.</p>
-<div class="highlight"><div class="chroma">
-<table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt">1
-</span></code></pre></td>
-<td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-go" data-lang="go"><span class="line"><span class="cl"><span class="nx">fmt</span><span class="p">.</span><span class="nf">Errorf</span><span class="p">(</span><span class="s">&#34;query failure, err:%v&#34;</span><span class="p">,</span> <span class="nx">err</span><span class="p">)</span>
-</span></span></code></pre></td></tr></table>
-</div>
-</div><p>However, the above approach loses the original error type and only gets the textual information of the error description.</p>
-<p>In order not to lose the error chain of function calls, using <code>fmt.Errorf </code> with the special formatting verb <code>%w</code> allows to repackage a new error based on an existing error.</p>
-<div class="highlight"><div class="chroma">
-<table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt">1
-</span></code></pre></td>
-<td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-go" data-lang="go"><span class="line"><span class="cl"><span class="nx">fmt</span><span class="p">.</span><span class="nf">Errorf</span><span class="p">(</span><span class="s">&#34;query failure, err:%w&#34;</span><span class="p">,</span> <span class="nx">err</span><span class="p">)</span>
-</span></span></code></pre></td></tr></table>
-</div>
-</div><p>For such secondary wrapped errors, the following three methods are provided in the errors package.</p>
+</div><p>If you want to use the code from the <code>island-package</code> package in <code>main.go</code>, all you need to do is initialize the go module and it will automatically generate a go.mod file that looks like this.</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt">1
@@ -459,13 +378,110 @@
 </span><span class="lnt">3
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-go" data-lang="go"><span class="line"><span class="cl"><span class="kd">func</span> <span class="nf">Unwrap</span><span class="p">(</span><span class="nx">err</span> <span class="kt">error</span><span class="p">)</span> <span class="kt">error</span> <span class="c1">// get err contains the next level of error
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="kd">func</span> <span class="nf">Is</span><span class="p">(</span><span class="nx">err</span><span class="p">,</span> <span class="nx">target</span> <span class="kt">error</span><span class="p">)</span> <span class="kt">bool</span> <span class="c1">// Determine if err contains target
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="kd">func</span> <span class="nf">As</span><span class="p">(</span><span class="nx">err</span> <span class="kt">error</span><span class="p">,</span> <span class="nx">target</span> <span class="kd">interface</span><span class="p">{})</span> <span class="kt">bool</span> <span class="c1">// Determine if err is of type target
-</span></span></span></code></pre></td></tr></table>
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">module design
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">go 1.17
+</span></span></code></pre></td></tr></table>
 </div>
-</div><h2 id="error-structure-type">Error structure type</h2>
-<p>In addition, we can define our own structure types to implement the <code>error </code>interface.</p>
+</div><p>These are two key pieces of information.</p>
+<p>The first line is the name of this general package we have.</p>
+<p>You can understand that our new go project is actually one big package.</p>
+<p>And then you&rsquo;ll see that when I import the local package, the package name in front of it is this name.</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-go" data-lang="go"><span class="line"><span class="cl"><span class="kn">package</span> <span class="nx">main</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="kn">import</span> <span class="p">(</span>
+</span></span><span class="line"><span class="cl">	<span class="nx">islandPackage</span> <span class="s">&#34;design/island-package&#34;</span>
+</span></span><span class="line"><span class="cl">	<span class="s">&#34;fmt&#34;</span>
+</span></span><span class="line"><span class="cl"><span class="p">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="kd">func</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">	<span class="nx">fmt</span><span class="p">.</span><span class="nf">Println</span><span class="p">(</span><span class="s">&#34;hello world&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">	<span class="nx">islandPackage</span><span class="p">.</span><span class="nf">SayHello</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>See the design in front of <code>island-package</code>?</p>
+<p>For example, if you change the first line in <code>go.mod</code> to <code>github.com/golangstackdev</code>, then the import of the <code>main.go</code> file in your project will have to become<code> github.com/golangstackdev/island-package</code>.</p>
+<p>The second line of <code>go.mod</code> sets the go version of our current environment, i.e. the minimum version supported.</p>
+<h2 id="not-under-the-same-project">Not under the same project</h2>
+<p>In fact, it is inevitable that we have to refer to packages that are under someone else&rsquo;s project, not under our own.Let&rsquo;s look at a project structure</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">project01
+</span></span><span class="line"><span class="cl">├── go.mod
+</span></span><span class="line"><span class="cl">└── main.go
+</span></span><span class="line"><span class="cl">project02
+</span></span><span class="line"><span class="cl">└── island-package
+</span></span><span class="line"><span class="cl">    ├── go.mod
+</span></span><span class="line"><span class="cl">    └── hello.go
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>We have a new <code>main.go</code> under <code>project01</code>.</p>
+<p>At the same time, we have a <code>project02 </code> in the directory where <code>project01 </code> is located.</p>
+<p><code>project01 </code> needs to use the packages in <code>project02</code>.</p>
+<p>At this time, in order to complete the reference: the referenced package and the used project should have their own separate <code>go.mod</code> files.</p>
+<p><code>project02/island-package/go.mod</code> The content is very simple, it is the basic two lines.</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">module island-package
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">go 1.17
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p><code>project01/go.mod</code>  is a bit more complicated and requires two steps.</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-go" data-lang="go"><span class="line"><span class="cl"><span class="nx">module</span> <span class="nx">project01</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="k">go</span> <span class="mf">1.17</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="nx">require</span> <span class="nx">island</span><span class="o">-</span><span class="kn">package</span> <span class="nx">v0</span><span class="mf">.0.0</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="nx">replace</span> <span class="nx">island</span><span class="o">-</span><span class="kn">package</span> <span class="p">=&gt;</span> <span class="p">..</span><span class="o">/</span><span class="nx">project02</span><span class="o">/</span><span class="nx">island</span><span class="o">-</span><span class="kn">package</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>require is to declare the name and version of the package we are introducing.</p>
+<p>replace is the path to the package for which the replacement will be done.</p>
+<p>Very easy to understand!</p>
+<p>Then we can use it normally in the <code>project01/main.go</code> file.</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt">1
@@ -479,14 +495,14 @@
 </span><span class="lnt">9
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-go" data-lang="go"><span class="line"><span class="cl"><span class="c1">// OpError custom structure type
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="kd">type</span> <span class="nx">OpError</span> <span class="kd">struct</span> <span class="p">{</span>
-</span></span><span class="line"><span class="cl">	<span class="nx">Op</span> <span class="kt">string</span>
-</span></span><span class="line"><span class="cl"><span class="p">}</span>
+<pre tabindex="0" class="chroma"><code class="language-go" data-lang="go"><span class="line"><span class="cl"><span class="kn">package</span> <span class="nx">main</span>
 </span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl"><span class="c1">// Error OpError type implements the error interface
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="kd">func</span> <span class="p">(</span><span class="nx">e</span> <span class="o">*</span><span class="nx">OpError</span><span class="p">)</span> <span class="nf">Error</span><span class="p">()</span> <span class="kt">string</span> <span class="p">{</span>
-</span></span><span class="line"><span class="cl">	<span class="k">return</span> <span class="nx">fmt</span><span class="p">.</span><span class="nf">Sprintf</span><span class="p">(</span><span class="s">&#34;No authority to perform %s operation&#34;</span><span class="p">,</span> <span class="nx">e</span><span class="p">.</span><span class="nx">Op</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="kn">import</span> <span class="p">(</span>
+</span></span><span class="line"><span class="cl">	<span class="nx">islandPackage</span> <span class="s">&#34;island-package&#34;</span>
+</span></span><span class="line"><span class="cl"><span class="p">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="kd">func</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">	<span class="nx">islandPackage</span><span class="p">.</span><span class="nf">SayHello</span><span class="p">()</span>
 </span></span><span class="line"><span class="cl"><span class="p">}</span>
 </span></span></code></pre></td></tr></table>
 </div>
@@ -509,22 +525,9 @@
       
       <nav class="post-nav">
         
-          <a class="prev" href="/post/gin-uses-joniter-to-bind-the-json-request-body/">
-            
-            <i class="iconfont">
-              <svg  class="icon" viewBox="0 0 1024 1024" version="1.1"
-  xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
-  width="18" height="18">
-  <path d="M691.908486 949.511495l75.369571-89.491197c10.963703-12.998035 10.285251-32.864502-1.499144-44.378743L479.499795 515.267417 757.434875 204.940602c11.338233-12.190647 11.035334-32.285311-0.638543-44.850487l-80.46666-86.564541c-11.680017-12.583596-30.356378-12.893658-41.662889-0.716314L257.233596 494.235404c-11.332093 12.183484-11.041474 32.266891 0.657986 44.844348l80.46666 86.564541c1.772366 1.910513 3.706415 3.533476 5.750981 4.877077l306.620399 321.703933C662.505829 963.726242 680.945807 962.528973 691.908486 949.511495z"></path>
-</svg>
-
-            </i>
-            <span class="prev-text nav-default">Gin Uses Joniter to Bind the Json Request Body</span>
-            <span class="prev-text nav-mobile">Prev</span>
-          </a>
         
-          <a class="next" href="/post/how-to-use-go-humanize/">
-            <span class="next-text nav-default">How to use go-humanize</span>
+          <a class="next" href="/post/gin-uses-joniter-to-bind-the-json-request-body/">
+            <span class="next-text nav-default">Gin Uses Joniter to Bind the Json Request Body</span>
             <span class="prev-text nav-mobile">Next</span>
             
             <i class="iconfont">
