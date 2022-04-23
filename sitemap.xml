@@ -3,41 +3,55 @@
   
   <url>
     <loc>https://www.golangi.net/categories/</loc>
-    <lastmod>2022-04-20T00:00:00+00:00</lastmod>
+    <lastmod>2022-04-23T00:00:00+00:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.5</priority>
   </url>
   
   <url>
-    <loc>https://www.golangi.net/post/go-mod-import-local-packages/</loc>
-    <lastmod>2022-04-20T00:00:00+00:00</lastmod>
+    <loc>https://www.golangi.net/post/go-will-support-the-pdqsort-in-next-version/</loc>
+    <lastmod>2022-04-23T00:00:00+00:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.5</priority>
   </url>
   
   <url>
     <loc>https://www.golangi.net/tags/golang/</loc>
-    <lastmod>2022-04-20T00:00:00+00:00</lastmod>
+    <lastmod>2022-04-23T00:00:00+00:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.5</priority>
   </url>
   
   <url>
     <loc>https://www.golangi.net/</loc>
-    <lastmod>2022-04-20T00:00:00+00:00</lastmod>
+    <lastmod>2022-04-23T00:00:00+00:00</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.5</priority>
+  </url>
+  
+  <url>
+    <loc>https://www.golangi.net/categories/news/</loc>
+    <lastmod>2022-04-23T00:00:00+00:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.5</priority>
   </url>
   
   <url>
     <loc>https://www.golangi.net/post/</loc>
-    <lastmod>2022-04-20T00:00:00+00:00</lastmod>
+    <lastmod>2022-04-23T00:00:00+00:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.5</priority>
   </url>
   
   <url>
     <loc>https://www.golangi.net/tags/</loc>
+    <lastmod>2022-04-23T00:00:00+00:00</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.5</priority>
+  </url>
+  
+  <url>
+    <loc>https://www.golangi.net/post/go-mod-import-local-packages/</loc>
     <lastmod>2022-04-20T00:00:00+00:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.5</priority>

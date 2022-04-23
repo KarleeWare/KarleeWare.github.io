@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>news on Golang island</title>
+    <link>https://www.golangi.net/categories/news/</link>
+    <description>Recent content in news on Golang island</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en</language>
+    <lastBuildDate>Sat, 23 Apr 2022 00:00:00 +0000</lastBuildDate><atom:link href="https://www.golangi.net/categories/news/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Go Will Support the Pdqsort in Next Version</title>
+      <link>https://www.golangi.net/post/go-will-support-the-pdqsort-in-next-version/</link>
+      <pubDate>Sat, 23 Apr 2022 00:00:00 +0000</pubDate>
+      
+      <guid>https://www.golangi.net/post/go-will-support-the-pdqsort-in-next-version/</guid>
+      <description>According to Go&amp;rsquo;s commit https://github.com/golang/go/commit/72e77a7f41bbf45d466119444307fd3ae996e257 , it plans to use pdqsort, a well-known fast sorting algorithm, in its next release, and according to the commit information, the author of this commit is an employee from ByteDance
+ The developer describes the pdqsort algorithm in the commit as follows:
+ In all benchmark tests, pdqsort was never significantly slower than the previous algorithm In common mode, pdqsort is usually faster (i.</description>
+    </item>
+    
+  </channel>
+</rss>

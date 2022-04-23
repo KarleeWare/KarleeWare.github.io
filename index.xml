@@ -6,10 +6,36 @@
     <description>Recent content on Golang island</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en</language>
-    <lastBuildDate>Wed, 20 Apr 2022 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Sat, 23 Apr 2022 00:00:00 +0000</lastBuildDate>
     
         <atom:link href="https://www.golangi.net/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Go Will Support the Pdqsort in Next Version</title>
+      <link>https://www.golangi.net/post/go-will-support-the-pdqsort-in-next-version/</link>
+      <pubDate>Sat, 23 Apr 2022 00:00:00 +0000</pubDate>
+      
+      <guid>https://www.golangi.net/post/go-will-support-the-pdqsort-in-next-version/</guid>
+      
+        <description>&lt;blockquote&gt;
+&lt;p&gt;According to Go&amp;rsquo;s commit &lt;a href=&#34;https://github.com/golang/go/commit/72e77a7f41bbf45d466119444307fd3ae996e257&#34;&gt;https://github.com/golang/go/commit/72e77a7f41bbf45d466119444307fd3ae996e257&lt;/a&gt; , it plans to use &lt;strong&gt;pdqsort&lt;/strong&gt;, a well-known fast sorting algorithm, in its next release, and according to the commit information, the author of this commit is an employee from ByteDance&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;The developer describes the &lt;strong&gt;pdqsort&lt;/strong&gt; algorithm in the commit as follows:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;In all benchmark tests, &lt;strong&gt;pdqsort&lt;/strong&gt; was never significantly slower than the previous algorithm&lt;/li&gt;
+&lt;li&gt;In common mode, &lt;strong&gt;pdqsort&lt;/strong&gt; is usually faster (i.e. 10 times faster in sorted slices)&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;img src=&#34;https://cdn.jsdelivr.net/gh/KarleeWare/golangi-img/2022/04/23/e7dbfac605454edcadd506f5b9fddc7f.png&#34; alt=&#34;commit log&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;pdqsort&lt;/strong&gt; &lt;strong&gt;(Pattern-defeating quicksort)&lt;/strong&gt;, is a novel sorting algorithm that quickly combines the fast average case of randomized quick sort with the worst case of heap sort, while implementing linear time on inputs with a specific pattern. pdqsort is a David Mussers introsort extensions and improvements.&lt;/p&gt;
+&lt;p&gt;There are currently C++ and Rust implementations of this algorithm, and many developers have tested it and found that &lt;strong&gt;pdqsort&lt;/strong&gt; has a large performance improvement over the commonly used introsort.&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;C++ implementation: &lt;a href=&#34;https://github.com/orlp/pdqsort&#34;&gt;https://github.com/orlp/pdqsort&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;Rust implementation: &lt;a href=&#34;https://docs.rs/pdqsort/latest/pdqsort/&#34;&gt;https://docs.rs/pdqsort/latest/pdqsort/&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+</description>
+      
+    </item>
     
     <item>
       <title>Go Mod Import Local Packages</title>
