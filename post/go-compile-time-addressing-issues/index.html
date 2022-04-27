@@ -1,0 +1,777 @@
+<!DOCTYPE html>
+<html lang="en" itemscope itemtype="http://schema.org/WebPage">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>Go Compile Time Addressing Issues - Golang island</title>
+  
+
+<meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=yes"/>
+
+<meta name="MobileOptimized" content="width"/>
+<meta name="HandheldFriendly" content="true"/>
+
+
+<meta name="applicable-device" content="pc,mobile">
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+<meta name="mobile-web-app-capable" content="yes">
+
+<meta name="author" content="Golang island" /><meta name="description" content="understand &#39;cannot take the address of xx&#39; and &#39;cannot call pointer method on xx&#39;" />
+<meta name="keywords" content="golang, compile, addressing, pointer method, address, call, take" />
+
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.96.0" />
+
+
+<link rel="canonical" href="https://www.golangi.net/post/go-compile-time-addressing-issues/" />
+
+
+
+
+
+<link rel="icon" href="/favicon.ico" />
+
+
+
+
+
+
+
+
+
+
+
+<link rel="stylesheet" href="/sass/jane.min.b3a8813c06e6d785beba22bf8264e174fa2cb3a396b22f9ba24e2c00c18aaf7f.css" integrity="sha256-s6iBPAbm14W&#43;uiK/gmThdPoss6OWsi&#43;bok4sAMGKr38=" media="screen" crossorigin="anonymous">
+
+
+
+
+
+<meta property="og:title" content="Go Compile Time Addressing Issues" />
+<meta property="og:description" content="understand &#39;cannot take the address of xx&#39; and &#39;cannot call pointer method on xx&#39;" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://www.golangi.net/post/go-compile-time-addressing-issues/" /><meta property="article:section" content="post" />
+<meta property="article:published_time" content="2022-04-26T00:00:00+00:00" />
+<meta property="article:modified_time" content="2022-04-26T00:00:00+00:00" />
+
+<meta itemprop="name" content="Go Compile Time Addressing Issues">
+<meta itemprop="description" content="understand &#39;cannot take the address of xx&#39; and &#39;cannot call pointer method on xx&#39;"><meta itemprop="datePublished" content="2022-04-26T00:00:00+00:00" />
+<meta itemprop="dateModified" content="2022-04-26T00:00:00+00:00" />
+<meta itemprop="wordCount" content="789">
+<meta itemprop="keywords" content="golang," /><meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Go Compile Time Addressing Issues"/>
+<meta name="twitter:description" content="understand &#39;cannot take the address of xx&#39; and &#39;cannot call pointer method on xx&#39;"/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+
+
+
+
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-06536LM40G"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-06536LM40G');
+</script>
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">Golang island</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <li class="mobile-menu-item">
+        
+          
+          
+            <a class="menu-item-link" href="https://www.golangi.net/">Home</a>
+          
+        
+      </li><li class="mobile-menu-item">
+        
+          
+          
+            <a class="menu-item-link" href="https://www.golangi.net/post/">Archives</a>
+          
+        
+      </li><li class="mobile-menu-item">
+        
+          
+          
+            <a class="menu-item-link" href="https://www.golangi.net/tags/">Tags</a>
+          
+        
+      </li><li class="mobile-menu-item">
+        
+          
+          
+            <a class="menu-item-link" href="https://www.golangi.net/categories/">Categories</a>
+          
+        
+      </li><li class="mobile-menu-item">
+        
+          
+          
+            <a class="menu-item-link" href="https://www.golangi.net/about">About</a>
+          
+        
+      </li>
+    
+
+    
+  </ul>
+</nav>
+
+
+  
+    
+
+
+
+
+
+
+  <link rel="stylesheet" href="/lib/photoswipe/photoswipe.min.css" />
+  <link rel="stylesheet" href="/lib/photoswipe/default-skin/default-skin.min.css" />
+
+
+
+
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+<div class="pswp__bg"></div>
+
+<div class="pswp__scroll-wrap">
+    
+    <div class="pswp__container">
+      <div class="pswp__item"></div>
+      <div class="pswp__item"></div>
+      <div class="pswp__item"></div>
+    </div>
+    
+    <div class="pswp__ui pswp__ui--hidden">
+    <div class="pswp__top-bar">
+      
+      <div class="pswp__counter"></div>
+      <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+      <button class="pswp__button pswp__button--share" title="Share"></button>
+      <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+      <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+      
+      
+      <div class="pswp__preloader">
+        <div class="pswp__preloader__icn">
+          <div class="pswp__preloader__cut">
+            <div class="pswp__preloader__donut"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+      <div class="pswp__share-tooltip"></div>
+    </div>
+    <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+    </button>
+    <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+    </button>
+    <div class="pswp__caption">
+      <div class="pswp__caption__center"></div>
+    </div>
+    </div>
+    </div>
+</div>
+
+  
+
+  
+
+  
+
+  <header id="header" class="header container">
+    <div class="logo-wrapper">
+  <a href="/" class="logo">
+    
+      Golang island
+    
+  </a>
+</div>
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    
+    
+        <li class="menu-item">
+        
+          
+          
+            <a class="menu-item-link" href="https://www.golangi.net/">Home</a>
+          
+
+        
+
+      </li>
+    
+        <li class="menu-item">
+        
+          
+          
+            <a class="menu-item-link" href="https://www.golangi.net/post/">Archives</a>
+          
+
+        
+
+      </li>
+    
+        <li class="menu-item">
+        
+          
+          
+            <a class="menu-item-link" href="https://www.golangi.net/tags/">Tags</a>
+          
+
+        
+
+      </li>
+    
+        <li class="menu-item">
+        
+          
+          
+            <a class="menu-item-link" href="https://www.golangi.net/categories/">Categories</a>
+          
+
+        
+
+      </li>
+    
+        <li class="menu-item">
+        
+          
+          
+            <a class="menu-item-link" href="https://www.golangi.net/about">About</a>
+          
+
+        
+
+      </li>
+    
+
+    
+    
+
+    
+  </ul>
+</nav>
+
+  </header>
+
+  <div id="mobile-panel">
+    <main id="main" class="main bg-llight">
+      <div class="content-wrapper">
+        <div id="content" class="content container">
+          <article class="post bg-white">
+    
+    <header class="post-header">
+      <h1 class="post-title">Go Compile Time Addressing Issues</h1>
+      
+      <div class="post-meta">
+        <time datetime="2022-04-26" class="post-time">
+          2022-04-26
+        </time>
+        <div class="post-category">
+            <a href="https://www.golangi.net/categories/tutorials/"> tutorials </a>
+            
+          </div>
+        <span class="more-meta"> 789 words </span>
+          <span class="more-meta"> 4 min read </span>
+
+        
+        
+
+        
+        
+      </div>
+    </header>
+
+    
+    
+<div class="post-toc" id="post-toc">
+  <h2 class="post-toc-title">Table of Contents</h2>
+  <div class="post-toc-content">
+    <nav id="TableOfContents">
+  <ul>
+    <li><a href="#demo-code">Demo Code</a></li>
+    <li><a href="#output-result">Output Result</a></li>
+    <li><a href="#issue-summary">Issue Summary</a></li>
+    <li><a href="#extended-thinking">Extended Thinking</a></li>
+  </ul>
+</nav>
+  </div>
+</div>
+
+    
+    <div class="post-content">
+      <blockquote>
+<p>“cannot take the address of XXX” and “cannot call pointer method on XXX”</p>
+</blockquote>
+<h2 id="demo-code">Demo Code</h2>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span><span class="lnt">31
+</span><span class="lnt">32
+</span><span class="lnt">33
+</span><span class="lnt">34
+</span><span class="lnt">35
+</span><span class="lnt">36
+</span><span class="lnt">37
+</span><span class="lnt">38
+</span><span class="lnt">39
+</span><span class="lnt">40
+</span><span class="lnt">41
+</span><span class="lnt">42
+</span><span class="lnt">43
+</span><span class="lnt">44
+</span><span class="lnt">45
+</span><span class="lnt">46
+</span><span class="lnt">47
+</span><span class="lnt">48
+</span><span class="lnt">49
+</span><span class="lnt">50
+</span><span class="lnt">51
+</span><span class="lnt">52
+</span><span class="lnt">53
+</span><span class="lnt">54
+</span><span class="lnt">55
+</span><span class="lnt">56
+</span><span class="lnt">57
+</span><span class="lnt">58
+</span><span class="lnt">59
+</span><span class="lnt">60
+</span><span class="lnt">61
+</span><span class="lnt">62
+</span><span class="lnt">63
+</span><span class="lnt">64
+</span><span class="lnt">65
+</span><span class="lnt">66
+</span><span class="lnt">67
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-go" data-lang="go"><span class="line"><span class="cl"><span class="kn">package</span> <span class="nx">main</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="kd">type</span> <span class="nx">B</span> <span class="kd">struct</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="nx">Id</span> <span class="kt">int</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="kd">func</span> <span class="nf">New</span><span class="p">()</span> <span class="nx">B</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="k">return</span> <span class="nx">B</span><span class="p">{}</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="kd">func</span> <span class="nf">New2</span><span class="p">()</span> <span class="o">*</span><span class="nx">B</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="k">return</span> <span class="o">&amp;</span><span class="nx">B</span><span class="p">{}</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="kd">func</span> <span class="p">(</span><span class="nx">b</span> <span class="o">*</span><span class="nx">B</span><span class="p">)</span> <span class="nf">Hello</span><span class="p">()</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="k">return</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="kd">func</span> <span class="p">(</span><span class="nx">b</span> <span class="nx">B</span><span class="p">)</span> <span class="nf">World</span><span class="p">()</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="k">return</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="kd">func</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="c1">// The receiver of the method is of type *T
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="nf">New</span><span class="p">().</span><span class="nf">Hello</span><span class="p">()</span> <span class="c1">// compile not pass
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>
+</span></span><span class="line"><span class="cl">    <span class="nx">b1</span> <span class="o">:=</span> <span class="nf">New</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl">    <span class="nx">b1</span><span class="p">.</span><span class="nf">Hello</span><span class="p">()</span> <span class="c1">// compile pass
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>
+</span></span><span class="line"><span class="cl">    <span class="nx">b2</span> <span class="o">:=</span> <span class="nx">B</span><span class="p">{}</span>
+</span></span><span class="line"><span class="cl">    <span class="nx">b2</span><span class="p">.</span><span class="nf">Hello</span><span class="p">()</span> <span class="c1">// compile pass
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>
+</span></span><span class="line"><span class="cl">    <span class="p">(</span><span class="nx">B</span><span class="p">{}).</span><span class="nf">Hello</span><span class="p">()</span> <span class="c1">// compile not pass
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="nx">B</span><span class="p">{}.</span><span class="nf">Hello</span><span class="p">()</span>   <span class="c1">// compile not pass
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>
+</span></span><span class="line"><span class="cl">    <span class="nf">New2</span><span class="p">().</span><span class="nf">Hello</span><span class="p">()</span> <span class="c1">// compile pass
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>
+</span></span><span class="line"><span class="cl">    <span class="nx">b3</span> <span class="o">:=</span> <span class="nf">New2</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl">    <span class="nx">b3</span><span class="p">.</span><span class="nf">Hello</span><span class="p">()</span> <span class="c1">// compile pass
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>
+</span></span><span class="line"><span class="cl">    <span class="nx">b4</span> <span class="o">:=</span> <span class="o">&amp;</span><span class="nx">B</span><span class="p">{}</span> <span class="c1">// compile pass
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="nx">b4</span><span class="p">.</span><span class="nf">Hello</span><span class="p">()</span> <span class="c1">// compile pass
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>
+</span></span><span class="line"><span class="cl">    <span class="p">(</span><span class="o">&amp;</span><span class="nx">B</span><span class="p">{}).</span><span class="nf">Hello</span><span class="p">()</span> <span class="c1">// compile pass
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>
+</span></span><span class="line"><span class="cl">    <span class="c1">// The receiver of the method is of type T
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="nf">New</span><span class="p">().</span><span class="nf">World</span><span class="p">()</span> <span class="c1">// compile pass
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>
+</span></span><span class="line"><span class="cl">    <span class="nx">b5</span> <span class="o">:=</span> <span class="nf">New</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl">    <span class="nx">b5</span><span class="p">.</span><span class="nf">World</span><span class="p">()</span> <span class="c1">// compile pass
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>
+</span></span><span class="line"><span class="cl">    <span class="nx">b6</span> <span class="o">:=</span> <span class="nx">B</span><span class="p">{}</span>
+</span></span><span class="line"><span class="cl">    <span class="nx">b6</span><span class="p">.</span><span class="nf">World</span><span class="p">()</span> <span class="c1">// compile pass
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>
+</span></span><span class="line"><span class="cl">    <span class="p">(</span><span class="nx">B</span><span class="p">{}).</span><span class="nf">World</span><span class="p">()</span> <span class="c1">// compile pass
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="nx">B</span><span class="p">{}.</span><span class="nf">World</span><span class="p">()</span>   <span class="c1">// compile pass
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>
+</span></span><span class="line"><span class="cl">    <span class="nf">New2</span><span class="p">().</span><span class="nf">World</span><span class="p">()</span> <span class="c1">// compile pass
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>
+</span></span><span class="line"><span class="cl">    <span class="nx">b7</span> <span class="o">:=</span> <span class="nf">New2</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl">    <span class="nx">b7</span><span class="p">.</span><span class="nf">World</span><span class="p">()</span> <span class="c1">// compile pass
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>
+</span></span><span class="line"><span class="cl">    <span class="nx">b8</span> <span class="o">:=</span> <span class="o">&amp;</span><span class="nx">B</span><span class="p">{}</span> <span class="c1">// compile pass
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="nx">b8</span><span class="p">.</span><span class="nf">World</span><span class="p">()</span> <span class="c1">// compile pass
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>
+</span></span><span class="line"><span class="cl">    <span class="p">(</span><span class="o">&amp;</span><span class="nx">B</span><span class="p">{}).</span><span class="nf">World</span><span class="p">()</span> <span class="c1">// compile pass
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="p">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h2 id="output-result">Output Result</h2>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-go" data-lang="go"><span class="line"><span class="cl"><span class="p">.</span><span class="o">/</span><span class="nx">main</span><span class="p">.</span><span class="k">go</span><span class="p">:</span><span class="mi">25</span><span class="p">:</span><span class="mi">10</span><span class="p">:</span> <span class="nx">cannot</span> <span class="nx">call</span> <span class="nx">pointer</span> <span class="nx">method</span> <span class="nx">on</span> <span class="nf">New</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl"><span class="p">.</span><span class="o">/</span><span class="nx">main</span><span class="p">.</span><span class="k">go</span><span class="p">:</span><span class="mi">25</span><span class="p">:</span><span class="mi">10</span><span class="p">:</span> <span class="nx">cannot</span> <span class="nx">take</span> <span class="nx">the</span> <span class="nx">address</span> <span class="nx">of</span> <span class="nf">New</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl"><span class="p">.</span><span class="o">/</span><span class="nx">main</span><span class="p">.</span><span class="k">go</span><span class="p">:</span><span class="mi">33</span><span class="p">:</span><span class="mi">10</span><span class="p">:</span> <span class="nx">cannot</span> <span class="nx">call</span> <span class="nx">pointer</span> <span class="nx">method</span> <span class="nx">on</span> <span class="nx">B</span> <span class="nx">literal</span>
+</span></span><span class="line"><span class="cl"><span class="p">.</span><span class="o">/</span><span class="nx">main</span><span class="p">.</span><span class="k">go</span><span class="p">:</span><span class="mi">33</span><span class="p">:</span><span class="mi">10</span><span class="p">:</span> <span class="nx">cannot</span> <span class="nx">take</span> <span class="nx">the</span> <span class="nx">address</span> <span class="nx">of</span> <span class="nx">B</span> <span class="nx">literal</span>
+</span></span><span class="line"><span class="cl"><span class="p">.</span><span class="o">/</span><span class="nx">main</span><span class="p">.</span><span class="k">go</span><span class="p">:</span><span class="mi">34</span><span class="p">:</span><span class="mi">8</span><span class="p">:</span> <span class="nx">cannot</span> <span class="nx">call</span> <span class="nx">pointer</span> <span class="nx">method</span> <span class="nx">on</span> <span class="nx">B</span> <span class="nx">literal</span>
+</span></span><span class="line"><span class="cl"><span class="p">.</span><span class="o">/</span><span class="nx">main</span><span class="p">.</span><span class="k">go</span><span class="p">:</span><span class="mi">34</span><span class="p">:</span><span class="mi">8</span><span class="p">:</span> <span class="nx">cannot</span> <span class="nx">take</span> <span class="nx">the</span> <span class="nx">address</span> <span class="nx">of</span> <span class="nx">B</span> <span class="nx">literal</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h2 id="issue-summary">Issue Summary</h2>
+<p>Assuming that a receiver on a method of type T has both a T type and a *T pointer type, then it is not possible to call a method of a *T receiver on a T value that cannot be addressed</p>
+<ul>
+<li>
+<p><code>&amp;B{} </code>is a pointer, addressable</p>
+</li>
+<li>
+<p><code>B{}</code> is a value, not addressable</p>
+</li>
+<li>
+<p><code>b := B{} </code> b is a variable, addressable</p>
+</li>
+</ul>
+<h2 id="extended-thinking">Extended Thinking</h2>
+<p><a href="https://go.dev/ref/spec#Address_operators">The Golang Specification</a> defines addressable objects as follows.</p>
+<blockquote>
+<p>For an operand x of type T, the address operation &amp;x generates a pointer of type *T to x. The operand must be addressable, that is, either a variable, pointer indirection, or slice indexing operation; or a field selector of an addressable struct operand; or an array indexing operation of an addressable array. As an exception to the addressability requirement, x may also be a (possibly parenthesized) composite literal. If the evaluation of x would cause a run-time panic, then the evaluation of &amp;x does too.</p>
+</blockquote>
+<p>The following are addressable:</p>
+<ul>
+<li>A variable: <code>&amp;x</code></li>
+<li>pointer indirection: <code>&amp;*x</code></li>
+<li>slice indexing operation (whether slice is addressable or not): <code>&amp;s[1]</code></li>
+<li>Addressable field of struct: <code>&amp;point</code></li>
+<li>Indexing of addressable arrays: <code>&amp;a[0]</code></li>
+<li>composite literal type:<code>&amp;struct{ X int }{1}</code></li>
+</ul>
+<p>The following cases <code> x</code> is not addressable and a pointer cannot be obtained using <code>&amp;x</code>.</p>
+<ul>
+<li>Bytes in a string</li>
+<li>Elements of a map object</li>
+<li>Dynamic values of interface objects (obtained by type assertions)</li>
+<li>constants</li>
+<li>literal values (not composite literal)</li>
+<li>package level functions</li>
+<li>methods method (used as function values)</li>
+<li>intermediate value
+<ul>
+<li>Function calls</li>
+<li>Explicit type conversions</li>
+<li>All types of operations (except pointer dereference operations <code> *x</code>):
+<ul>
+<li>channel receive operations</li>
+<li>sub-string operations</li>
+<li>sub-slice operations</li>
+<li>Operators such as addition, subtraction, multiplication and division</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p>There are several points that need to be explained:</p>
+<ul>
+<li>Why are constants not addressable?</li>
+</ul>
+<blockquote>
+<p>If it is addressable, we can modify the value of the constant by a pointer, breaking the definition of the constant.</p>
+</blockquote>
+<ul>
+<li>Why are the elements of map not addressable?</li>
+</ul>
+<blockquote>
+<p>Two reasons, if the object does not exist, it returns a zero value, which is an immutable object, so it cannot be addressed, and if the object exists, because the addresses of the elements in the map implementation in Go change, which means that the addressing result is meaningless.</p>
+</blockquote>
+<ul>
+<li>Why is a slice addressable regardless of whether its elements are addressable or not?</li>
+</ul>
+<blockquote>
+<p>Because slice implements an array at the bottom, it is addressable.</p>
+</blockquote>
+<ul>
+<li>Why are the characters/bytes in the string not addressable again?</li>
+</ul>
+<blockquote>
+<p>Because strings are immutable.</p>
+</blockquote>
+<p>There are also several references to addressable in the specification:</p>
+<ul>
+<li>When calling a method whose receiver is a pointer type, using an addressable value will automatically get a pointer to that value</li>
+<li>The object to the left of the <code>++</code>, <code> --</code> statement must be addressable or be an indexed operation of map</li>
+<li>The left object of the assignment statement = must be addressable, or be an indexed operation of map, or be <code> _</code></li>
+<li>The above statement also uses the <code>for ... range</code> statement</li>
+</ul>
+
+    </div>
+
+    
+    
+
+
+    
+    
+
+    <footer class="post-footer">
+      <div class="post-tags">
+          <a href="https://www.golangi.net/tags/golang/">golang</a>
+          
+        </div>
+
+      
+      <nav class="post-nav">
+        
+          <a class="prev" href="/post/why-does-go-like-to-use-byte/">
+            
+            <i class="iconfont">
+              <svg  class="icon" viewBox="0 0 1024 1024" version="1.1"
+  xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
+  width="18" height="18">
+  <path d="M691.908486 949.511495l75.369571-89.491197c10.963703-12.998035 10.285251-32.864502-1.499144-44.378743L479.499795 515.267417 757.434875 204.940602c11.338233-12.190647 11.035334-32.285311-0.638543-44.850487l-80.46666-86.564541c-11.680017-12.583596-30.356378-12.893658-41.662889-0.716314L257.233596 494.235404c-11.332093 12.183484-11.041474 32.266891 0.657986 44.844348l80.46666 86.564541c1.772366 1.910513 3.706415 3.533476 5.750981 4.877077l306.620399 321.703933C662.505829 963.726242 680.945807 962.528973 691.908486 949.511495z"></path>
+</svg>
+
+            </i>
+            <span class="prev-text nav-default">Why Does Go Like to Use []byte</span>
+            <span class="prev-text nav-mobile">Prev</span>
+          </a>
+        
+          <a class="next" href="/post/go-will-support-the-pdqsort-in-next-version/">
+            <span class="next-text nav-default">Go Will Support the Pdqsort in Next Version</span>
+            <span class="prev-text nav-mobile">Next</span>
+            
+            <i class="iconfont">
+              <svg class="icon" viewBox="0 0 1024 1024" version="1.1"
+  xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
+  width="18" height="18">
+  <path d="M332.091514 74.487481l-75.369571 89.491197c-10.963703 12.998035-10.285251 32.864502 1.499144 44.378743l286.278095 300.375162L266.565125 819.058374c-11.338233 12.190647-11.035334 32.285311 0.638543 44.850487l80.46666 86.564541c11.680017 12.583596 30.356378 12.893658 41.662889 0.716314l377.434212-421.426145c11.332093-12.183484 11.041474-32.266891-0.657986-44.844348l-80.46666-86.564541c-1.772366-1.910513-3.706415-3.533476-5.750981-4.877077L373.270379 71.774697C361.493148 60.273758 343.054193 61.470003 332.091514 74.487481z"></path>
+</svg>
+
+            </i>
+          </a>
+      </nav>
+    </footer>
+  </article>
+
+  
+  
+
+  
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+    
+
+  
+
+        </div>
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="icon-links">
+  
+
+
+<a href="https://www.golangi.net/index.xml" rel="noopener alternate" type="application/rss&#43;xml"
+    class="iconfont" title="rss" target="_blank">
+    <svg class="icon" viewBox="0 0 1024 1024" version="1.1"
+  xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
+  width="30" height="30">
+  <path d="M819.157333 1024C819.157333 574.592 449.408 204.8 0 204.8V0c561.706667 0 1024 462.293333 1024 1024h-204.842667zM140.416 743.04a140.8 140.8 0 0 1 140.501333 140.586667A140.928 140.928 0 0 1 140.074667 1024C62.72 1024 0 961.109333 0 883.626667s62.933333-140.544 140.416-140.586667zM678.784 1024h-199.04c0-263.210667-216.533333-479.786667-479.744-479.786667V345.173333c372.352 0 678.784 306.517333 678.784 678.826667z"></path>
+</svg>
+
+  </a>
+   
+</div>
+
+<div class="copyright">
+  <span class="power-by">
+    Powered by <a class="hexo-link" href="https://gohugo.io">Hugo</a>
+  </span>
+  <span class="division">|</span>
+  <span class="theme-info">
+    Theme - <a class="theme-link" href="https://github.com/xianmin/hugo-theme-jane">Jane</a>
+  </span>
+
+  <span class="copyright-year">
+    &copy;
+    2022
+    <span class="heart">
+      
+      <i class="iconfont">
+        <svg class="icon" viewBox="0 0 1025 1024" version="1.1"
+  xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
+  width="14" height="14">
+  <path d="M1000.1 247.9c-15.5-37.3-37.6-70.6-65.7-98.9-54.4-54.8-125.8-85-201-85-85.7 0-166 39-221.4 107.4C456.6 103 376.3 64 290.6 64c-75.1 0-146.5 30.4-201.1 85.6-28.2 28.5-50.4 61.9-65.8 99.3-16 38.8-24 79.9-23.6 122.2 0.7 91.7 40.1 177.2 108.1 234.8 3.1 2.6 6 5.1 8.9 7.8 14.9 13.4 58 52.8 112.6 102.7 93.5 85.5 209.9 191.9 257.5 234.2 7 6.1 15.8 9.5 24.9 9.5 9.2 0 18.1-3.4 24.9-9.5 34.5-30.7 105.8-95.9 181.4-165 74.2-67.8 150.9-138 195.8-178.2 69.5-57.9 109.6-144.4 109.9-237.3 0.1-42.5-8-83.6-24-122.2z"
+   fill="#8a8a8a"></path>
+</svg>
+
+      </i>
+    </span><span class="author">
+        Golang island
+        
+      </span></span>
+
+  
+  
+
+  
+</div>
+
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont">
+        
+        <svg class="icon" viewBox="0 0 1024 1024" version="1.1"
+  xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
+  width="35" height="35">
+  <path d="M510.866688 227.694839 95.449397 629.218702l235.761562 0-2.057869 328.796468 362.40389 0L691.55698 628.188232l241.942331-3.089361L510.866688 227.694839zM63.840492 63.962777l894.052392 0 0 131.813095L63.840492 195.775872 63.840492 63.962777 63.840492 63.962777zM63.840492 63.962777"></path>
+</svg>
+
+      </i>
+    </div>
+  </div>
+  
+<script type="text/javascript" src="/lib/jquery/jquery-3.2.1.min.js"></script>
+  <script type="text/javascript" src="/lib/slideout/slideout-1.0.1.min.js"></script>
+
+
+
+
+<script type="text/javascript" src="/js/main.dee43230127a73d039a734510fa896c89c3c7ce0cf0be0c7a7433f8fd69b76dc.js" integrity="sha256-3uQyMBJ6c9A5pzRRD6iWyJw8fODPC&#43;DHp0M/j9abdtw=" crossorigin="anonymous"></script>
+
+
+
+  <script type="text/javascript">
+    window.MathJax = {
+      showProcessingMessages: false,
+      messageStyle: 'none'
+    };
+  </script>
+  <script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.4/MathJax.js?config=TeX-MML-AM_CHTML' async></script>
+
+
+
+
+
+
+
+
+
+  
+    <script type="text/javascript" src="/js/load-photoswipe.js"></script>
+    <script type="text/javascript" src="/lib/photoswipe/photoswipe.min.js"></script>
+    <script type="text/javascript" src="/lib/photoswipe/photoswipe-ui-default.min.js"></script>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</body>
+</html>
