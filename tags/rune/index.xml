@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>rune on Golang island</title>
+    <link>https://www.golangi.net/tags/rune/</link>
+    <description>Recent content in rune on Golang island</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en</language>
+    <lastBuildDate>Wed, 27 Apr 2022 00:00:00 +0000</lastBuildDate><atom:link href="https://www.golangi.net/tags/rune/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Why Does Go Like to Use []byte</title>
+      <link>https://www.golangi.net/post/why-does-go-like-to-use-byte/</link>
+      <pubDate>Wed, 27 Apr 2022 00:00:00 +0000</pubDate>
+      
+      <guid>https://www.golangi.net/post/why-does-go-like-to-use-byte/</guid>
+      <description>There is no inheritance in Go, so to further analyze the byte type, you need to know more about the type keyword.
+ Learn more about type keywords When we write code, the keyword type is mandatory for defining structs. For example: type Student struct,In addition to defining your own structs, type  also supports redefining existing types. For example: type String string
+ What are the benefits of doing this?</description>
+    </item>
+    
+  </channel>
+</rss>

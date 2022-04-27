@@ -8,11 +8,164 @@
     <language>en</language>
     <lastBuildDate>Wed, 27 Apr 2022 00:00:00 +0000</lastBuildDate><atom:link href="https://www.golangi.net/tags/index.xml" rel="self" type="application/rss+xml" />
     <item>
+      <title>byte</title>
+      <link>https://www.golangi.net/tags/byte/</link>
+      <pubDate>Wed, 27 Apr 2022 00:00:00 +0000</pubDate>
+      
+      <guid>https://www.golangi.net/tags/byte/</guid>
+      <description></description>
+    </item>
+    
+    <item>
       <title>golang</title>
       <link>https://www.golangi.net/tags/golang/</link>
       <pubDate>Wed, 27 Apr 2022 00:00:00 +0000</pubDate>
       
       <guid>https://www.golangi.net/tags/golang/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>rune</title>
+      <link>https://www.golangi.net/tags/rune/</link>
+      <pubDate>Wed, 27 Apr 2022 00:00:00 +0000</pubDate>
+      
+      <guid>https://www.golangi.net/tags/rune/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>type</title>
+      <link>https://www.golangi.net/tags/type/</link>
+      <pubDate>Wed, 27 Apr 2022 00:00:00 +0000</pubDate>
+      
+      <guid>https://www.golangi.net/tags/type/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>addressing</title>
+      <link>https://www.golangi.net/tags/addressing/</link>
+      <pubDate>Tue, 26 Apr 2022 00:00:00 +0000</pubDate>
+      
+      <guid>https://www.golangi.net/tags/addressing/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>compile</title>
+      <link>https://www.golangi.net/tags/compile/</link>
+      <pubDate>Tue, 26 Apr 2022 00:00:00 +0000</pubDate>
+      
+      <guid>https://www.golangi.net/tags/compile/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>pdqsort</title>
+      <link>https://www.golangi.net/tags/pdqsort/</link>
+      <pubDate>Sat, 23 Apr 2022 00:00:00 +0000</pubDate>
+      
+      <guid>https://www.golangi.net/tags/pdqsort/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>mod</title>
+      <link>https://www.golangi.net/tags/mod/</link>
+      <pubDate>Wed, 20 Apr 2022 00:00:00 +0000</pubDate>
+      
+      <guid>https://www.golangi.net/tags/mod/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>package</title>
+      <link>https://www.golangi.net/tags/package/</link>
+      <pubDate>Wed, 20 Apr 2022 00:00:00 +0000</pubDate>
+      
+      <guid>https://www.golangi.net/tags/package/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>gin</title>
+      <link>https://www.golangi.net/tags/gin/</link>
+      <pubDate>Tue, 19 Apr 2022 00:00:00 +0000</pubDate>
+      
+      <guid>https://www.golangi.net/tags/gin/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>json</title>
+      <link>https://www.golangi.net/tags/json/</link>
+      <pubDate>Tue, 19 Apr 2022 00:00:00 +0000</pubDate>
+      
+      <guid>https://www.golangi.net/tags/json/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>jsoniter</title>
+      <link>https://www.golangi.net/tags/jsoniter/</link>
+      <pubDate>Tue, 19 Apr 2022 00:00:00 +0000</pubDate>
+      
+      <guid>https://www.golangi.net/tags/jsoniter/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>error</title>
+      <link>https://www.golangi.net/tags/error/</link>
+      <pubDate>Sat, 16 Apr 2022 00:00:00 +0000</pubDate>
+      
+      <guid>https://www.golangi.net/tags/error/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>interface</title>
+      <link>https://www.golangi.net/tags/interface/</link>
+      <pubDate>Sat, 16 Apr 2022 00:00:00 +0000</pubDate>
+      
+      <guid>https://www.golangi.net/tags/interface/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>humanize</title>
+      <link>https://www.golangi.net/tags/humanize/</link>
+      <pubDate>Tue, 12 Apr 2022 00:00:00 +0000</pubDate>
+      
+      <guid>https://www.golangi.net/tags/humanize/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>encoding</title>
+      <link>https://www.golangi.net/tags/encoding/</link>
+      <pubDate>Mon, 11 Apr 2022 00:00:00 +0000</pubDate>
+      
+      <guid>https://www.golangi.net/tags/encoding/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>goroutines</title>
+      <link>https://www.golangi.net/tags/goroutines/</link>
+      <pubDate>Mon, 11 Apr 2022 00:00:00 +0000</pubDate>
+      
+      <guid>https://www.golangi.net/tags/goroutines/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>command</title>
+      <link>https://www.golangi.net/tags/command/</link>
+      <pubDate>Sun, 10 Apr 2022 00:00:00 +0000</pubDate>
+      
+      <guid>https://www.golangi.net/tags/command/</guid>
       <description></description>
     </item>
     

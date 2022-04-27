@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>jsoniter on Golang island</title>
+    <link>https://www.golangi.net/tags/jsoniter/</link>
+    <description>Recent content in jsoniter on Golang island</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en</language>
+    <lastBuildDate>Tue, 19 Apr 2022 00:00:00 +0000</lastBuildDate><atom:link href="https://www.golangi.net/tags/jsoniter/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Gin Uses Joniter to Bind the Json Request Body</title>
+      <link>https://www.golangi.net/post/gin-uses-joniter-to-bind-the-json-request-body/</link>
+      <pubDate>Tue, 19 Apr 2022 00:00:00 +0000</pubDate>
+      
+      <guid>https://www.golangi.net/post/gin-uses-joniter-to-bind-the-json-request-body/</guid>
+      <description>In the Gin framework, the standard package encoding/json is used by default when handling parameter bindings in JSON format, however, the standard package cannot meet some of our requirements, such as compatibility with integers, strings, PHP null arrays, time formats, etc.
+ The easiest way When developing the API, you need to use ShouldBindJSON to bind the incoming parameters to the structure.
+1 2 3 4  // ShouldBindJSON is a shortcut for c.</description>
+    </item>
+    
+  </channel>
+</rss>
