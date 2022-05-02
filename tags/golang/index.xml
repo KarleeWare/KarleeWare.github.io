@@ -6,7 +6,16 @@
     <description>Recent content in golang on Golang island</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en</language>
-    <lastBuildDate>Wed, 27 Apr 2022 00:00:00 +0000</lastBuildDate><atom:link href="https://www.golangi.net/tags/golang/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Mon, 02 May 2022 00:00:00 +0000</lastBuildDate><atom:link href="https://www.golangi.net/tags/golang/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>How to Use the Go Timer</title>
+      <link>https://www.golangi.net/post/how-to-use-the-go-timer/</link>
+      <pubDate>Mon, 02 May 2022 00:00:00 +0000</pubDate>
+      
+      <guid>https://www.golangi.net/post/how-to-use-the-go-timer/</guid>
+      <description>In general, many times we are faced with a situation where we need to run a time recorder that constantly shows us the current time or keeps executing a certain amount of code peacefully for a given time interval, in this case we should use Ticker, to use this we need to use the time package of the Golang, we have a method called NewTicker(). It allows us to stop and start the time code, we need to create a code channel by passing chan and bool as parameters that will be used to check if it is open, if the channel is open means that the timer will continue.</description>
+    </item>
+    
     <item>
       <title>Why Does Go Like to Use []byte</title>
       <link>https://www.golangi.net/post/why-does-go-like-to-use-byte/</link>

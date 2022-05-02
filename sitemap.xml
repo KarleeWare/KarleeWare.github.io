@@ -2,6 +2,76 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>https://www.golangi.net/categories/</loc>
+    <lastmod>2022-05-02T00:00:00+00:00</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.5</priority>
+  </url>
+  
+  <url>
+    <loc>https://www.golangi.net/tags/golang/</loc>
+    <lastmod>2022-05-02T00:00:00+00:00</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.5</priority>
+  </url>
+  
+  <url>
+    <loc>https://www.golangi.net/</loc>
+    <lastmod>2022-05-02T00:00:00+00:00</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.5</priority>
+  </url>
+  
+  <url>
+    <loc>https://www.golangi.net/post/how-to-use-the-go-timer/</loc>
+    <lastmod>2022-05-02T00:00:00+00:00</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.5</priority>
+  </url>
+  
+  <url>
+    <loc>https://www.golangi.net/post/</loc>
+    <lastmod>2022-05-02T00:00:00+00:00</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.5</priority>
+  </url>
+  
+  <url>
+    <loc>https://www.golangi.net/tags/</loc>
+    <lastmod>2022-05-02T00:00:00+00:00</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.5</priority>
+  </url>
+  
+  <url>
+    <loc>https://www.golangi.net/tags/ticker/</loc>
+    <lastmod>2022-05-02T00:00:00+00:00</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.5</priority>
+  </url>
+  
+  <url>
+    <loc>https://www.golangi.net/tags/time/</loc>
+    <lastmod>2022-05-02T00:00:00+00:00</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.5</priority>
+  </url>
+  
+  <url>
+    <loc>https://www.golangi.net/tags/timer/</loc>
+    <lastmod>2022-05-02T00:00:00+00:00</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.5</priority>
+  </url>
+  
+  <url>
+    <loc>https://www.golangi.net/categories/tutorials/</loc>
+    <lastmod>2022-05-02T00:00:00+00:00</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.5</priority>
+  </url>
+  
+  <url>
     <loc>https://www.golangi.net/tags/byte/</loc>
     <lastmod>2022-04-27T00:00:00+00:00</lastmod>
     <changefreq>weekly</changefreq>
@@ -9,49 +79,7 @@
   </url>
   
   <url>
-    <loc>https://www.golangi.net/categories/</loc>
-    <lastmod>2022-04-27T00:00:00+00:00</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.5</priority>
-  </url>
-  
-  <url>
-    <loc>https://www.golangi.net/tags/golang/</loc>
-    <lastmod>2022-04-27T00:00:00+00:00</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.5</priority>
-  </url>
-  
-  <url>
-    <loc>https://www.golangi.net/</loc>
-    <lastmod>2022-04-27T00:00:00+00:00</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.5</priority>
-  </url>
-  
-  <url>
-    <loc>https://www.golangi.net/post/</loc>
-    <lastmod>2022-04-27T00:00:00+00:00</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.5</priority>
-  </url>
-  
-  <url>
     <loc>https://www.golangi.net/tags/rune/</loc>
-    <lastmod>2022-04-27T00:00:00+00:00</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.5</priority>
-  </url>
-  
-  <url>
-    <loc>https://www.golangi.net/tags/</loc>
-    <lastmod>2022-04-27T00:00:00+00:00</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.5</priority>
-  </url>
-  
-  <url>
-    <loc>https://www.golangi.net/categories/tutorials/</loc>
     <lastmod>2022-04-27T00:00:00+00:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.5</priority>

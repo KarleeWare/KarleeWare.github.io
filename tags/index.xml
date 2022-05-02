@@ -6,22 +6,49 @@
     <description>Recent content in Tags on Golang island</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en</language>
-    <lastBuildDate>Wed, 27 Apr 2022 00:00:00 +0000</lastBuildDate><atom:link href="https://www.golangi.net/tags/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Mon, 02 May 2022 00:00:00 +0000</lastBuildDate><atom:link href="https://www.golangi.net/tags/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>golang</title>
+      <link>https://www.golangi.net/tags/golang/</link>
+      <pubDate>Mon, 02 May 2022 00:00:00 +0000</pubDate>
+      
+      <guid>https://www.golangi.net/tags/golang/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>ticker</title>
+      <link>https://www.golangi.net/tags/ticker/</link>
+      <pubDate>Mon, 02 May 2022 00:00:00 +0000</pubDate>
+      
+      <guid>https://www.golangi.net/tags/ticker/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>time</title>
+      <link>https://www.golangi.net/tags/time/</link>
+      <pubDate>Mon, 02 May 2022 00:00:00 +0000</pubDate>
+      
+      <guid>https://www.golangi.net/tags/time/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>timer</title>
+      <link>https://www.golangi.net/tags/timer/</link>
+      <pubDate>Mon, 02 May 2022 00:00:00 +0000</pubDate>
+      
+      <guid>https://www.golangi.net/tags/timer/</guid>
+      <description></description>
+    </item>
+    
     <item>
       <title>byte</title>
       <link>https://www.golangi.net/tags/byte/</link>
       <pubDate>Wed, 27 Apr 2022 00:00:00 +0000</pubDate>
       
       <guid>https://www.golangi.net/tags/byte/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>golang</title>
-      <link>https://www.golangi.net/tags/golang/</link>
-      <pubDate>Wed, 27 Apr 2022 00:00:00 +0000</pubDate>
-      
-      <guid>https://www.golangi.net/tags/golang/</guid>
       <description></description>
     </item>
     
@@ -157,15 +184,6 @@
       <pubDate>Mon, 11 Apr 2022 00:00:00 +0000</pubDate>
       
       <guid>https://www.golangi.net/tags/goroutines/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>command</title>
-      <link>https://www.golangi.net/tags/command/</link>
-      <pubDate>Sun, 10 Apr 2022 00:00:00 +0000</pubDate>
-      
-      <guid>https://www.golangi.net/tags/command/</guid>
       <description></description>
     </item>
     

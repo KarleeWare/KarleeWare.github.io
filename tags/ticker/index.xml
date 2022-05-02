@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>ticker on Golang island</title>
+    <link>https://www.golangi.net/tags/ticker/</link>
+    <description>Recent content in ticker on Golang island</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en</language>
+    <lastBuildDate>Mon, 02 May 2022 00:00:00 +0000</lastBuildDate><atom:link href="https://www.golangi.net/tags/ticker/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>How to Use the Go Timer</title>
+      <link>https://www.golangi.net/post/how-to-use-the-go-timer/</link>
+      <pubDate>Mon, 02 May 2022 00:00:00 +0000</pubDate>
+      
+      <guid>https://www.golangi.net/post/how-to-use-the-go-timer/</guid>
+      <description>In general, many times we are faced with a situation where we need to run a time recorder that constantly shows us the current time or keeps executing a certain amount of code peacefully for a given time interval, in this case we should use Ticker, to use this we need to use the time package of the Golang, we have a method called NewTicker(). It allows us to stop and start the time code, we need to create a code channel by passing chan and bool as parameters that will be used to check if it is open, if the channel is open means that the timer will continue.</description>
+    </item>
+    
+  </channel>
+</rss>
