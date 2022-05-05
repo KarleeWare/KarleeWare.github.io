@@ -6,7 +6,18 @@
     <description>Recent content in tutorials on Golang island</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en</language>
-    <lastBuildDate>Mon, 02 May 2022 00:00:00 +0000</lastBuildDate><atom:link href="https://www.golangi.net/categories/tutorials/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Thu, 05 May 2022 14:36:13 +0800</lastBuildDate><atom:link href="https://www.golangi.net/categories/tutorials/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>The Best Practice of Handling Go Error</title>
+      <link>https://www.golangi.net/post/the-best-practice-of-handling-go-error/</link>
+      <pubDate>Thu, 05 May 2022 14:36:13 +0800</pubDate>
+      
+      <guid>https://www.golangi.net/post/the-best-practice-of-handling-go-error/</guid>
+      <description>Today we share best practices for error handling in the Golang, learn about the current shortcomings of errors, compromises, and considerations when using them.
+ What is error As you know, error is an interface type embedded in the source code. According to the export principle, only uppercase ones can be referenced by other source code packages, but error is predeclared identifiers and is not a keyword.
+1 2 3 4 5  // The error built-in interface type is the conventional interface for // representing an error condition, with the nil value representing no error.</description>
+    </item>
+    
     <item>
       <title>How to Use the Go Timer</title>
       <link>https://www.golangi.net/post/how-to-use-the-go-timer/</link>

@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>error on Golang island</title>
-    <link>https://www.golangi.net/tags/error/</link>
-    <description>Recent content in error on Golang island</description>
+    <title>ErrorGroup&#34; on Golang island</title>
+    <link>https://www.golangi.net/tags/errorgroup/</link>
+    <description>Recent content in ErrorGroup&#34; on Golang island</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en</language>
-    <lastBuildDate>Thu, 05 May 2022 14:36:13 +0800</lastBuildDate><atom:link href="https://www.golangi.net/tags/error/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Thu, 05 May 2022 14:36:13 +0800</lastBuildDate><atom:link href="https://www.golangi.net/tags/errorgroup/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>The Best Practice of Handling Go Error</title>
       <link>https://www.golangi.net/post/the-best-practice-of-handling-go-error/</link>
@@ -16,17 +16,6 @@
       <description>Today we share best practices for error handling in the Golang, learn about the current shortcomings of errors, compromises, and considerations when using them.
  What is error As you know, error is an interface type embedded in the source code. According to the export principle, only uppercase ones can be referenced by other source code packages, but error is predeclared identifiers and is not a keyword.
 1 2 3 4 5  // The error built-in interface type is the conventional interface for // representing an error condition, with the nil value representing no error.</description>
-    </item>
-    
-    <item>
-      <title>Error interface and error handling</title>
-      <link>https://www.golangi.net/post/error-interface-and-error-handling/</link>
-      <pubDate>Sat, 16 Apr 2022 00:00:00 +0000</pubDate>
-      
-      <guid>https://www.golangi.net/post/error-interface-and-error-handling/</guid>
-      <description>Error handling in the Go language is not quite the same as in other languages. It treats errors as a value. There is more emphasis on determining errors and handling them, rather than catching them directly with a catch
- Error interface The Go language treats errors as a special value and does not support the use of try/catch to catch exceptions.
-The Go language uses an interface called error to represent error types.</description>
     </item>
     
   </channel>

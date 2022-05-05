@@ -1,0 +1,1759 @@
+<!DOCTYPE html>
+<html lang="en" itemscope itemtype="http://schema.org/WebPage">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>The Best Practice of Handling Go Error - Golang island</title>
+  
+
+<meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=yes"/>
+
+<meta name="MobileOptimized" content="width"/>
+<meta name="HandheldFriendly" content="true"/>
+
+
+<meta name="applicable-device" content="pc,mobile">
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+<meta name="mobile-web-app-capable" content="yes">
+
+<meta name="author" content="Golang island" /><meta name="description" content="best practices for error handling in the Golang" />
+<meta name="keywords" content="go, golang, panic, wrap, error, ErrorGroup, errorWriter, wrapper" />
+
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.96.0" />
+
+
+<link rel="canonical" href="https://www.golangi.net/post/the-best-practice-of-handling-go-error/" />
+
+
+
+
+
+<link rel="icon" href="/favicon.ico" />
+
+
+
+
+
+
+
+
+
+
+
+<link rel="stylesheet" href="/sass/jane.min.b3a8813c06e6d785beba22bf8264e174fa2cb3a396b22f9ba24e2c00c18aaf7f.css" integrity="sha256-s6iBPAbm14W&#43;uiK/gmThdPoss6OWsi&#43;bok4sAMGKr38=" media="screen" crossorigin="anonymous">
+
+
+
+
+
+<meta property="og:title" content="The Best Practice of Handling Go Error" />
+<meta property="og:description" content="best practices for error handling in the Golang" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://www.golangi.net/post/the-best-practice-of-handling-go-error/" /><meta property="article:section" content="post" />
+<meta property="article:published_time" content="2022-05-05T14:36:13+08:00" />
+<meta property="article:modified_time" content="2022-05-05T14:36:13+08:00" />
+
+<meta itemprop="name" content="The Best Practice of Handling Go Error">
+<meta itemprop="description" content="best practices for error handling in the Golang"><meta itemprop="datePublished" content="2022-05-05T14:36:13+08:00" />
+<meta itemprop="dateModified" content="2022-05-05T14:36:13+08:00" />
+<meta itemprop="wordCount" content="3353">
+<meta itemprop="keywords" content="golang,error,panic,ErrorGroup&#34;,wrap," /><meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="The Best Practice of Handling Go Error"/>
+<meta name="twitter:description" content="best practices for error handling in the Golang"/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+
+
+
+
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-06536LM40G"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-06536LM40G');
+</script>
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">Golang island</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <li class="mobile-menu-item">
+        
+          
+          
+            <a class="menu-item-link" href="https://www.golangi.net/">Home</a>
+          
+        
+      </li><li class="mobile-menu-item">
+        
+          
+          
+            <a class="menu-item-link" href="https://www.golangi.net/post/">Archives</a>
+          
+        
+      </li><li class="mobile-menu-item">
+        
+          
+          
+            <a class="menu-item-link" href="https://www.golangi.net/tags/">Tags</a>
+          
+        
+      </li><li class="mobile-menu-item">
+        
+          
+          
+            <a class="menu-item-link" href="https://www.golangi.net/categories/">Categories</a>
+          
+        
+      </li><li class="mobile-menu-item">
+        
+          
+          
+            <a class="menu-item-link" href="https://www.golangi.net/about">About</a>
+          
+        
+      </li>
+    
+
+    
+  </ul>
+</nav>
+
+
+  
+    
+
+
+
+
+
+
+  <link rel="stylesheet" href="/lib/photoswipe/photoswipe.min.css" />
+  <link rel="stylesheet" href="/lib/photoswipe/default-skin/default-skin.min.css" />
+
+
+
+
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+<div class="pswp__bg"></div>
+
+<div class="pswp__scroll-wrap">
+    
+    <div class="pswp__container">
+      <div class="pswp__item"></div>
+      <div class="pswp__item"></div>
+      <div class="pswp__item"></div>
+    </div>
+    
+    <div class="pswp__ui pswp__ui--hidden">
+    <div class="pswp__top-bar">
+      
+      <div class="pswp__counter"></div>
+      <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+      <button class="pswp__button pswp__button--share" title="Share"></button>
+      <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+      <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+      
+      
+      <div class="pswp__preloader">
+        <div class="pswp__preloader__icn">
+          <div class="pswp__preloader__cut">
+            <div class="pswp__preloader__donut"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+      <div class="pswp__share-tooltip"></div>
+    </div>
+    <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+    </button>
+    <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+    </button>
+    <div class="pswp__caption">
+      <div class="pswp__caption__center"></div>
+    </div>
+    </div>
+    </div>
+</div>
+
+  
+
+  
+
+  
+
+  <header id="header" class="header container">
+    <div class="logo-wrapper">
+  <a href="/" class="logo">
+    
+      Golang island
+    
+  </a>
+</div>
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    
+    
+        <li class="menu-item">
+        
+          
+          
+            <a class="menu-item-link" href="https://www.golangi.net/">Home</a>
+          
+
+        
+
+      </li>
+    
+        <li class="menu-item">
+        
+          
+          
+            <a class="menu-item-link" href="https://www.golangi.net/post/">Archives</a>
+          
+
+        
+
+      </li>
+    
+        <li class="menu-item">
+        
+          
+          
+            <a class="menu-item-link" href="https://www.golangi.net/tags/">Tags</a>
+          
+
+        
+
+      </li>
+    
+        <li class="menu-item">
+        
+          
+          
+            <a class="menu-item-link" href="https://www.golangi.net/categories/">Categories</a>
+          
+
+        
+
+      </li>
+    
+        <li class="menu-item">
+        
+          
+          
+            <a class="menu-item-link" href="https://www.golangi.net/about">About</a>
+          
+
+        
+
+      </li>
+    
+
+    
+    
+
+    
+  </ul>
+</nav>
+
+  </header>
+
+  <div id="mobile-panel">
+    <main id="main" class="main bg-llight">
+      <div class="content-wrapper">
+        <div id="content" class="content container">
+          <article class="post bg-white">
+    
+    <header class="post-header">
+      <h1 class="post-title">The Best Practice of Handling Go Error</h1>
+      
+      <div class="post-meta">
+        <time datetime="2022-05-05" class="post-time">
+          2022-05-05
+        </time>
+        <div class="post-category">
+            <a href="https://www.golangi.net/categories/tutorials/"> tutorials </a>
+            
+          </div>
+        <span class="more-meta"> 3353 words </span>
+          <span class="more-meta"> 16 min read </span>
+
+        
+        
+
+        
+        
+      </div>
+    </header>
+
+    
+    
+<div class="post-toc" id="post-toc">
+  <h2 class="post-toc-title">Table of Contents</h2>
+  <div class="post-toc-content">
+    <nav id="TableOfContents">
+  <ul>
+    <li><a href="#what-is-error">What is error</a></li>
+    <li><a href="#what-are-the-current-problems-with-error">What are the current problems with error</a>
+      <ul>
+        <li><a href="#wrap-more-information">Wrap more information</a></li>
+        <li><a href="#error-type">Error type</a></li>
+      </ul>
+    </li>
+    <li><a href="#source-code-implementation">Source code implementation</a>
+      <ul>
+        <li><a href="#how-to-generate-warapper-error">How to generate warapper error</a></li>
+        <li><a href="#cause-implementation">Cause Implementation</a></li>
+        <li><a href="#how-the-official-library-generates-a-wrapper-error">How the official library generates a wrapper error</a></li>
+        <li><a href="#official-library-unwrap-implementation">Official library Unwrap implementation</a></li>
+        <li><a href="#official-library-is-and-as-implementation">Official Library Is and As Implementation</a></li>
+      </ul>
+    </li>
+    <li><a href="#errgroup-use">ErrGroup Use</a></li>
+    <li><a href="#a-few-issues-to-note-in-online-practice">A few issues to note in online practice</a>
+      <ul>
+        <li><a href="#error-and-panic">error and panic</a></li>
+        <li><a href="#error-handling-and-resource-release">error handling and resource release</a></li>
+        <li><a href="#error-cascade-usage-issues">error Cascade usage issues</a></li>
+        <li><a href="#concurrency-issues">concurrency issues</a></li>
+        <li><a href="#to-ignore-or-not-to-ignore-error">to ignore or not to ignore error</a></li>
+        <li><a href="#errwriter">errWriter</a></li>
+        <li><a href="#when-to-print-the-call-stack">when to print the call stack</a></li>
+        <li><a href="#make-judgments-before-wrap">make judgments before Wrap</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+  </div>
+</div>
+
+    
+    <div class="post-content">
+      <blockquote>
+<p>Today we share best practices for error handling in the Golang, learn about the current shortcomings of errors, compromises, and considerations when using them.</p>
+</blockquote>
+<h2 id="what-is-error">What is error</h2>
+<p>As you know, <a href="https://github.com/golang/go/blob/master/src/builtin/builtin.go#L260,">error</a> is an interface type embedded in the source code. According to the export principle, only uppercase ones can be referenced by other source code packages, but <code>error</code> is predeclared identifiers and is not a keyword.</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-go" data-lang="go"><span class="line"><span class="cl"><span class="c1">// The error built-in interface type is the conventional interface for
+</span></span></span><span class="line"><span class="cl"><span class="c1">// representing an error condition, with the nil value representing no error.
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="kd">type</span> <span class="kt">error</span> <span class="kd">interface</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">	<span class="nf">Error</span><span class="p">()</span> <span class="kt">string</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p><code>error</code> Only one method <code>Error() string</code> returns an error message</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-go" data-lang="go"><span class="line"><span class="cl"><span class="c1">// New returns an error that formats as the given text.
+</span></span></span><span class="line"><span class="cl"><span class="c1">// Each call to New returns a distinct error value even if the text is identical.
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="kd">func</span> <span class="nf">New</span><span class="p">(</span><span class="nx">text</span> <span class="kt">string</span><span class="p">)</span> <span class="kt">error</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">	<span class="k">return</span> <span class="o">&amp;</span><span class="nx">errorString</span><span class="p">{</span><span class="nx">text</span><span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1">// errorString is a trivial implementation of error.
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="kd">type</span> <span class="nx">errorString</span> <span class="kd">struct</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">	<span class="nx">s</span> <span class="kt">string</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="kd">func</span> <span class="p">(</span><span class="nx">e</span> <span class="o">*</span><span class="nx">errorString</span><span class="p">)</span> <span class="nf">Error</span><span class="p">()</span> <span class="kt">string</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">	<span class="k">return</span> <span class="nx">e</span><span class="p">.</span><span class="nx">s</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>Generally we only need to call  <code>errors.New(&quot;error from somewhere&quot;)</code>  when we create an <code>error</code>, the underlying is a string structure <code>errorString s</code></p>
+<h2 id="what-are-the-current-problems-with-error">What are the current problems with error</h2>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-go" data-lang="go"><span class="line"><span class="cl"><span class="kd">func</span> <span class="nf">Test</span><span class="p">()</span> <span class="kt">error</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">	<span class="k">if</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nf">func1</span><span class="p">();</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">		<span class="k">return</span> <span class="nx">err</span>
+</span></span><span class="line"><span class="cl">	<span class="p">}</span>
+</span></span><span class="line"><span class="cl">  <span class="o">......</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>This is a common usage, but also the most criticized, many people think it is not as simple as try-catch usage, some people say go source code error handling accounted for half</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="kn">import</span> <span class="nn">sys</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="k">try</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">    <span class="n">f</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="s1">&#39;myfile.txt&#39;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="n">s</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">readline</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl">    <span class="n">i</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">s</span><span class="o">.</span><span class="n">strip</span><span class="p">())</span>
+</span></span><span class="line"><span class="cl"><span class="k">except</span> <span class="ne">OSError</span> <span class="k">as</span> <span class="n">err</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">    <span class="nb">print</span><span class="p">(</span><span class="s2">&#34;OS error: </span><span class="si">{0}</span><span class="s2">&#34;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">err</span><span class="p">))</span>
+</span></span><span class="line"><span class="cl"><span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">    <span class="nb">print</span><span class="p">(</span><span class="s2">&#34;Could not convert data to an integer.&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="k">except</span> <span class="ne">BaseException</span> <span class="k">as</span> <span class="n">err</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&#34;Unexpected </span><span class="si">{</span><span class="n">err</span><span class="si">=}</span><span class="s2">, </span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="n">err</span><span class="p">)</span><span class="si">=}</span><span class="s2">&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="k">raise</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>For example, the above is a python <code>try-catch</code> usage, where you write a bunch of logic first, don&rsquo;t handle exceptions, and finally catch them uniformly</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-rust" data-lang="rust"><span class="line"><span class="cl"><span class="kd">let</span><span class="w"> </span><span class="k">mut</span><span class="w"> </span><span class="n">cfg</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="bp">self</span><span class="p">.</span><span class="n">check_and_copy</span><span class="p">()</span><span class="o">?</span><span class="p">;</span><span class="w">
+</span></span></span></code></pre></td></tr></table>
+</div>
+</div><p>The <code>Rust</code> Result pattern is more concise than the rust Result pattern, a ? instead of our operation. But is the tedious judgment of error the current pain point? Obviously not, especially if you like the <code>C</code> language, but you like to do it every time</p>
+<p>The problem with the current error is twofold:</p>
+<ul>
+<li>Can&rsquo;t wrap more information, such as the call stack, such as layers of wrapped error messages</li>
+<li>Can&rsquo;t handle type information very well, e.g. I want to know if the error is of type io or type net</li>
+</ul>
+<h3 id="wrap-more-information">Wrap more information</h3>
+<p>There are many tools for this, the best known being <a href="https://github.com/pkg/errors">https://github.com/pkg/errors</a>, which has three main functions.</p>
+<ul>
+<li><code>Wrap</code> encapsulates the underlying error, adds more messages, and provides call stack information, which is missing in native error</li>
+<li><code>WithMessage</code> encapsulates the underlying error, adds more messages, but does not provide call stack information</li>
+<li><code>Cause</code> returns the bottom error, stripping away the layers of wrap</li>
+</ul>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span><span class="lnt">31
+</span><span class="lnt">32
+</span><span class="lnt">33
+</span><span class="lnt">34
+</span><span class="lnt">35
+</span><span class="lnt">36
+</span><span class="lnt">37
+</span><span class="lnt">38
+</span><span class="lnt">39
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-go" data-lang="go"><span class="line"><span class="cl"><span class="kn">import</span> <span class="p">(</span>
+</span></span><span class="line"><span class="cl">   <span class="s">&#34;database/sql&#34;</span>
+</span></span><span class="line"><span class="cl">   <span class="s">&#34;fmt&#34;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">   <span class="s">&#34;github.com/pkg/errors&#34;</span>
+</span></span><span class="line"><span class="cl"><span class="p">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="kd">func</span> <span class="nf">foo</span><span class="p">()</span> <span class="kt">error</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">   <span class="k">return</span> <span class="nx">errors</span><span class="p">.</span><span class="nf">Wrap</span><span class="p">(</span><span class="nx">sql</span><span class="p">.</span><span class="nx">ErrNoRows</span><span class="p">,</span> <span class="s">&#34;foo failed&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="kd">func</span> <span class="nf">bar</span><span class="p">()</span> <span class="kt">error</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">   <span class="k">return</span> <span class="nx">errors</span><span class="p">.</span><span class="nf">WithMessage</span><span class="p">(</span><span class="nf">foo</span><span class="p">(),</span> <span class="s">&#34;bar failed&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="kd">func</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">   <span class="nx">err</span> <span class="o">:=</span> <span class="nf">bar</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl">   <span class="k">if</span> <span class="nx">errors</span><span class="p">.</span><span class="nf">Cause</span><span class="p">(</span><span class="nx">err</span><span class="p">)</span> <span class="o">==</span> <span class="nx">sql</span><span class="p">.</span><span class="nx">ErrNoRows</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">      <span class="nx">fmt</span><span class="p">.</span><span class="nf">Printf</span><span class="p">(</span><span class="s">&#34;data not found, %v\n&#34;</span><span class="p">,</span> <span class="nx">err</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">      <span class="nx">fmt</span><span class="p">.</span><span class="nf">Printf</span><span class="p">(</span><span class="s">&#34;%+v\n&#34;</span><span class="p">,</span> <span class="nx">err</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">      <span class="k">return</span>
+</span></span><span class="line"><span class="cl">   <span class="p">}</span>
+</span></span><span class="line"><span class="cl">   <span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">      <span class="c1">// unknown error
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>   <span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="cm">/*Output:
+</span></span></span><span class="line"><span class="cl"><span class="cm">data not found, bar failed: foo failed: sql: no rows in result set
+</span></span></span><span class="line"><span class="cl"><span class="cm">sql: no rows in result set
+</span></span></span><span class="line"><span class="cl"><span class="cm">foo failed
+</span></span></span><span class="line"><span class="cl"><span class="cm">main.foo
+</span></span></span><span class="line"><span class="cl"><span class="cm">    /usr/three/main.go:11
+</span></span></span><span class="line"><span class="cl"><span class="cm">main.bar
+</span></span></span><span class="line"><span class="cl"><span class="cm">    /usr/three/main.go:15
+</span></span></span><span class="line"><span class="cl"><span class="cm">main.main
+</span></span></span><span class="line"><span class="cl"><span class="cm">    /usr/three/main.go:19
+</span></span></span><span class="line"><span class="cl"><span class="cm">runtime.main
+</span></span></span><span class="line"><span class="cl"><span class="cm">    ...
+</span></span></span><span class="line"><span class="cl"><span class="cm">*/</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>Here is the test code, when printed with <code>%v</code> only the raw error message is printed, when <code>%+v</code> the full call stack is printed. After go1.13, the standard library errors added the <code>Wrap</code> method</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span><span class="lnt">8
+</span><span class="lnt">9
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-go" data-lang="go"><span class="line"><span class="cl"><span class="kd">func</span> <span class="nf">ExampleUnwrap</span><span class="p">()</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">	<span class="nx">err1</span> <span class="o">:=</span> <span class="nx">errors</span><span class="p">.</span><span class="nf">New</span><span class="p">(</span><span class="s">&#34;error1&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">	<span class="nx">err2</span> <span class="o">:=</span> <span class="nx">fmt</span><span class="p">.</span><span class="nf">Errorf</span><span class="p">(</span><span class="s">&#34;error2: [%w]&#34;</span><span class="p">,</span> <span class="nx">err1</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">	<span class="nx">fmt</span><span class="p">.</span><span class="nf">Println</span><span class="p">(</span><span class="nx">err2</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">	<span class="nx">fmt</span><span class="p">.</span><span class="nf">Println</span><span class="p">(</span><span class="nx">errors</span><span class="p">.</span><span class="nf">Unwrap</span><span class="p">(</span><span class="nx">err2</span><span class="p">))</span>
+</span></span><span class="line"><span class="cl">	<span class="c1">// Output
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>	<span class="c1">// error2: [error1]
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>	<span class="c1">// error1
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="p">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>The standard library does not provide a way to increase the call stack, <code>fmt.Errorf</code> can wrap error when <code>%w</code> is specified, but overall, it is not as good as the <a href="https://github.com/pkg/errors">https://github.com/pkg/errors</a> library</p>
+<h3 id="error-type">Error type</h3>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-go" data-lang="go"><span class="line"><span class="cl"><span class="kn">import</span> <span class="p">(</span>
+</span></span><span class="line"><span class="cl">   <span class="s">&#34;database/sql&#34;</span>
+</span></span><span class="line"><span class="cl">   <span class="s">&#34;fmt&#34;</span>
+</span></span><span class="line"><span class="cl"><span class="p">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="kd">func</span> <span class="nf">foo</span><span class="p">()</span> <span class="kt">error</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">   <span class="k">return</span> <span class="nx">sql</span><span class="p">.</span><span class="nx">ErrNoRows</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="kd">func</span> <span class="nf">bar</span><span class="p">()</span> <span class="kt">error</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">   <span class="k">return</span> <span class="nf">foo</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="kd">func</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">   <span class="nx">err</span> <span class="o">:=</span> <span class="nf">bar</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl">   <span class="k">if</span> <span class="nx">err</span> <span class="o">==</span> <span class="nx">sql</span><span class="p">.</span><span class="nx">ErrNoRows</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">      <span class="nx">fmt</span><span class="p">.</span><span class="nf">Printf</span><span class="p">(</span><span class="s">&#34;data not found, %+v\n&#34;</span><span class="p">,</span> <span class="nx">err</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">      <span class="k">return</span>
+</span></span><span class="line"><span class="cl">   <span class="p">}</span>
+</span></span><span class="line"><span class="cl">   <span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">      <span class="c1">// Unknown error
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>   <span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="c1">//Outputs:
+</span></span></span><span class="line"><span class="cl"><span class="c1">// data not found, sql: no rows in result set
+</span></span></span></code></pre></td></tr></table>
+</div>
+</div><p>Sometimes we have to deal with type information, such as the above example, to determine if the err is <code>sql.ErrNoRows</code> then it is considered normal, data not found, similar to <code>redigo.Nil</code> in redigo means the record does not exist</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-go" data-lang="go"><span class="line"><span class="cl"><span class="kd">func</span> <span class="nf">foo</span><span class="p">()</span> <span class="kt">error</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">   <span class="k">return</span> <span class="nx">fmt</span><span class="p">.</span><span class="nf">Errorf</span><span class="p">(</span><span class="s">&#34;foo err, %v&#34;</span><span class="p">,</span> <span class="nx">sql</span><span class="p">.</span><span class="nx">ErrNoRows</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>But if foo puts a layer of wrap on the error, is the error still <code>sql.ErrNoRows</code> ? Definitely not. This is not as powerful as python <code>try-catch</code> error handling, which can be determined by different error classes. So how does go solve it? The answer is  <code>Is</code> and <code>As</code></p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-go" data-lang="go"><span class="line"><span class="cl"><span class="kn">import</span> <span class="p">(</span>
+</span></span><span class="line"><span class="cl">   <span class="s">&#34;database/sql&#34;</span>
+</span></span><span class="line"><span class="cl">   <span class="s">&#34;errors&#34;</span>
+</span></span><span class="line"><span class="cl">   <span class="s">&#34;fmt&#34;</span>
+</span></span><span class="line"><span class="cl"><span class="p">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="kd">func</span> <span class="nf">bar</span><span class="p">()</span> <span class="kt">error</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">   <span class="k">if</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nf">foo</span><span class="p">();</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">      <span class="k">return</span> <span class="nx">fmt</span><span class="p">.</span><span class="nf">Errorf</span><span class="p">(</span><span class="s">&#34;bar failed: %w&#34;</span><span class="p">,</span> <span class="nf">foo</span><span class="p">())</span>
+</span></span><span class="line"><span class="cl">   <span class="p">}</span>
+</span></span><span class="line"><span class="cl">   <span class="k">return</span> <span class="kc">nil</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="kd">func</span> <span class="nf">foo</span><span class="p">()</span> <span class="kt">error</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">   <span class="k">return</span> <span class="nx">fmt</span><span class="p">.</span><span class="nf">Errorf</span><span class="p">(</span><span class="s">&#34;foo failed: %w&#34;</span><span class="p">,</span> <span class="nx">sql</span><span class="p">.</span><span class="nx">ErrNoRows</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="kd">func</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">   <span class="nx">err</span> <span class="o">:=</span> <span class="nf">bar</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl">   <span class="k">if</span> <span class="nx">errors</span><span class="p">.</span><span class="nf">Is</span><span class="p">(</span><span class="nx">err</span><span class="p">,</span> <span class="nx">sql</span><span class="p">.</span><span class="nx">ErrNoRows</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">      <span class="nx">fmt</span><span class="p">.</span><span class="nf">Printf</span><span class="p">(</span><span class="s">&#34;data not found,  %+v\n&#34;</span><span class="p">,</span> <span class="nx">err</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">      <span class="k">return</span>
+</span></span><span class="line"><span class="cl">   <span class="p">}</span>
+</span></span><span class="line"><span class="cl">   <span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">      <span class="c1">// unknown error
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>   <span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="cm">/* Outputs:
+</span></span></span><span class="line"><span class="cl"><span class="cm">data not found,  bar failed: foo failed: sql: no rows in result set
+</span></span></span><span class="line"><span class="cl"><span class="cm">*/</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>Still this example, <code>errors.is</code> will recursively Unwrap err, to determine whether the error is <code>sql.ErrNoRows</code>, here a small problem, <code>Is</code> is to do the pointer address judgment, if the error <code>Error()</code> content is the same, but the root error is a different instance, then the <code>Is</code> judgment is also false</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-go" data-lang="go"><span class="line"><span class="cl"><span class="kd">func</span> <span class="nf">ExampleAs</span><span class="p">()</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">	<span class="k">if</span> <span class="nx">_</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">os</span><span class="p">.</span><span class="nf">Open</span><span class="p">(</span><span class="s">&#34;non-existing&#34;</span><span class="p">);</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">		<span class="kd">var</span> <span class="nx">pathError</span> <span class="o">*</span><span class="nx">fs</span><span class="p">.</span><span class="nx">PathError</span>
+</span></span><span class="line"><span class="cl">		<span class="k">if</span> <span class="nx">errors</span><span class="p">.</span><span class="nf">As</span><span class="p">(</span><span class="nx">err</span><span class="p">,</span> <span class="o">&amp;</span><span class="nx">pathError</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">			<span class="nx">fmt</span><span class="p">.</span><span class="nf">Println</span><span class="p">(</span><span class="s">&#34;Failed at path:&#34;</span><span class="p">,</span> <span class="nx">pathError</span><span class="p">.</span><span class="nx">Path</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">		<span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">			<span class="nx">fmt</span><span class="p">.</span><span class="nf">Println</span><span class="p">(</span><span class="nx">err</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">		<span class="p">}</span>
+</span></span><span class="line"><span class="cl">	<span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">	<span class="c1">// Output:
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>	<span class="c1">// Failed at path: non-existing
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="p">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>As determines whether the err is of type  <code>fs.PathError</code>, and recursively calls layers of lookups, as explained later in the source code. Another way to determine the type or cause of an error is the <code>errors.Cause</code> provided by <a href="https://github.com/pkg/errors">https://github.com/pkg/errors</a></p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-go" data-lang="go"><span class="line"><span class="cl"><span class="k">switch</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">errors</span><span class="p">.</span><span class="nf">Cause</span><span class="p">(</span><span class="nx">err</span><span class="p">).(</span><span class="kd">type</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl"><span class="k">case</span> <span class="o">*</span><span class="nx">MyError</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">        <span class="c1">// handle specifically
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="k">default</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">        <span class="c1">// unknown error
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="p">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>When there is no <code>Is</code> and <code>As</code> type determination, you need to determine the wrong self-symbol string</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-go" data-lang="go"><span class="line"><span class="cl"><span class="kd">func</span> <span class="p">(</span><span class="nx">conn</span> <span class="o">*</span><span class="nx">cendolConnectionV5</span><span class="p">)</span> <span class="nf">serve</span><span class="p">()</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">	<span class="c1">// Buffer needs to be preserved across messages because of packet coalescing.
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>	<span class="nx">reader</span> <span class="o">:=</span> <span class="nx">bufio</span><span class="p">.</span><span class="nf">NewReader</span><span class="p">(</span><span class="nx">conn</span><span class="p">.</span><span class="nx">Connection</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">	<span class="k">for</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">		<span class="nx">msg</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">conn</span><span class="p">.</span><span class="nf">readMessage</span><span class="p">(</span><span class="nx">reader</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">		<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">			<span class="k">if</span> <span class="nx">netErr</span><span class="p">,</span> <span class="nx">ok</span> <span class="o">:=</span> <span class="nx">strings</span><span class="p">.</span><span class="nf">Contain</span><span class="p">(</span><span class="nx">err</span><span class="p">.</span><span class="nf">Error</span><span class="p">(),</span> <span class="s">&#34;temprary&#34;</span><span class="p">);</span> <span class="nx">ok</span>   <span class="p">{</span>
+</span></span><span class="line"><span class="cl">					<span class="k">continue</span>
+</span></span><span class="line"><span class="cl">			<span class="p">}</span>
+</span></span><span class="line"><span class="cl">		<span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">		<span class="nx">conn</span><span class="p">.</span><span class="nf">processMessage</span><span class="p">(</span><span class="nx">msg</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">	<span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>If the connection error received by conn from the network is temporary, then you can continue and retry, but of course it is better to backoff sleep a bit. Of course, now there is a new type of <code>net.Error</code> that implements the Temporary interface, but it is also deprecated. See <a href="https://github.com/golang/go/issues/45729">#45729</a></p>
+<h2 id="source-code-implementation">Source code implementation</h2>
+<p>the code from <a href="https://github.com/pkg/errors">https://github.com/pkg/errors</a> library.</p>
+<h3 id="how-to-generate-warapper-error">How to generate warapper error</h3>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-go" data-lang="go"><span class="line"><span class="cl"><span class="c1">// Wrap returns an error annotating err with a stack trace
+</span></span></span><span class="line"><span class="cl"><span class="c1">// at the point Wrap is called, and the supplied message.
+</span></span></span><span class="line"><span class="cl"><span class="c1">// If err is nil, Wrap returns nil.
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="kd">func</span> <span class="nf">Wrap</span><span class="p">(</span><span class="nx">err</span> <span class="kt">error</span><span class="p">,</span> <span class="nx">message</span> <span class="kt">string</span><span class="p">)</span> <span class="kt">error</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">	<span class="k">if</span> <span class="nx">err</span> <span class="o">==</span> <span class="kc">nil</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">		<span class="k">return</span> <span class="kc">nil</span>
+</span></span><span class="line"><span class="cl">	<span class="p">}</span>
+</span></span><span class="line"><span class="cl">	<span class="nx">err</span> <span class="p">=</span> <span class="o">&amp;</span><span class="nx">withMessage</span><span class="p">{</span>
+</span></span><span class="line"><span class="cl">		<span class="nx">cause</span><span class="p">:</span> <span class="nx">err</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">		<span class="nx">msg</span><span class="p">:</span>   <span class="nx">message</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">	<span class="p">}</span>
+</span></span><span class="line"><span class="cl">	<span class="k">return</span> <span class="o">&amp;</span><span class="nx">withStack</span><span class="p">{</span>
+</span></span><span class="line"><span class="cl">		<span class="nx">err</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">		<span class="nf">callers</span><span class="p">(),</span>
+</span></span><span class="line"><span class="cl">	<span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>The main function is <code>Wrap</code>, the code implementation is relatively simple, see how to trace the call stack can be viewed in the source code</p>
+<h3 id="cause-implementation">Cause Implementation</h3>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-go" data-lang="go"><span class="line"><span class="cl"><span class="kd">type</span> <span class="nx">withStack</span> <span class="kd">struct</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">	<span class="kt">error</span>
+</span></span><span class="line"><span class="cl">	<span class="o">*</span><span class="nx">stack</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="kd">func</span> <span class="p">(</span><span class="nx">w</span> <span class="o">*</span><span class="nx">withStack</span><span class="p">)</span> <span class="nf">Cause</span><span class="p">()</span> <span class="kt">error</span> <span class="p">{</span> <span class="k">return</span> <span class="nx">w</span><span class="p">.</span><span class="kt">error</span> <span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="kd">func</span> <span class="nf">Cause</span><span class="p">(</span><span class="nx">err</span> <span class="kt">error</span><span class="p">)</span> <span class="kt">error</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">	<span class="kd">type</span> <span class="nx">causer</span> <span class="kd">interface</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">		<span class="nf">Cause</span><span class="p">()</span> <span class="kt">error</span>
+</span></span><span class="line"><span class="cl">	<span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">	<span class="k">for</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">		<span class="nx">cause</span><span class="p">,</span> <span class="nx">ok</span> <span class="o">:=</span> <span class="nx">err</span><span class="p">.(</span><span class="nx">causer</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">		<span class="k">if</span> <span class="p">!</span><span class="nx">ok</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">			<span class="k">break</span>
+</span></span><span class="line"><span class="cl">		<span class="p">}</span>
+</span></span><span class="line"><span class="cl">		<span class="nx">err</span> <span class="p">=</span> <span class="nx">cause</span><span class="p">.</span><span class="nf">Cause</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl">	<span class="p">}</span>
+</span></span><span class="line"><span class="cl">	<span class="k">return</span> <span class="nx">err</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p><code>Cause</code> recursive calls that do not implement the <code>causer</code> interface return this err</p>
+<h3 id="how-the-official-library-generates-a-wrapper-error">How the official library generates a wrapper error</h3>
+<p>The official library does not have such a function, but rather <code>fmt.Errorf</code> formatted with <code>%w</code></p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-go" data-lang="go"><span class="line"><span class="cl"><span class="nx">e</span> <span class="o">:=</span> <span class="nx">errors</span><span class="p">.</span><span class="nf">New</span><span class="p">(</span><span class="s">&#34;this is a error&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="nx">w</span> <span class="o">:=</span> <span class="nx">fmt</span><span class="p">.</span><span class="nf">Errorf</span><span class="p">(</span><span class="s">&#34;more info about it %w&#34;</span><span class="p">,</span> <span class="nx">e</span><span class="p">)</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span><span class="lnt">31
+</span><span class="lnt">32
+</span><span class="lnt">33
+</span><span class="lnt">34
+</span><span class="lnt">35
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-go" data-lang="go"><span class="line"><span class="cl"><span class="kd">func</span> <span class="nf">Errorf</span><span class="p">(</span><span class="nx">format</span> <span class="kt">string</span><span class="p">,</span> <span class="nx">a</span> <span class="o">...</span><span class="kd">interface</span><span class="p">{})</span> <span class="kt">error</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">	<span class="nx">p</span> <span class="o">:=</span> <span class="nf">newPrinter</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl">	<span class="nx">p</span><span class="p">.</span><span class="nx">wrapErrs</span> <span class="p">=</span> <span class="kc">true</span>
+</span></span><span class="line"><span class="cl">	<span class="nx">p</span><span class="p">.</span><span class="nf">doPrintf</span><span class="p">(</span><span class="nx">format</span><span class="p">,</span> <span class="nx">a</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">	<span class="nx">s</span> <span class="o">:=</span> <span class="nb">string</span><span class="p">(</span><span class="nx">p</span><span class="p">.</span><span class="nx">buf</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">	<span class="kd">var</span> <span class="nx">err</span> <span class="kt">error</span>
+</span></span><span class="line"><span class="cl">	<span class="k">if</span> <span class="nx">p</span><span class="p">.</span><span class="nx">wrappedErr</span> <span class="o">==</span> <span class="kc">nil</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">		<span class="nx">err</span> <span class="p">=</span> <span class="nx">errors</span><span class="p">.</span><span class="nf">New</span><span class="p">(</span><span class="nx">s</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">	<span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">		<span class="nx">err</span> <span class="p">=</span> <span class="o">&amp;</span><span class="nx">wrapError</span><span class="p">{</span><span class="nx">s</span><span class="p">,</span> <span class="nx">p</span><span class="p">.</span><span class="nx">wrappedErr</span><span class="p">}</span>
+</span></span><span class="line"><span class="cl">	<span class="p">}</span>
+</span></span><span class="line"><span class="cl">	<span class="nx">p</span><span class="p">.</span><span class="nf">free</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl">	<span class="k">return</span> <span class="nx">err</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="kd">func</span> <span class="p">(</span><span class="nx">p</span> <span class="o">*</span><span class="nx">pp</span><span class="p">)</span> <span class="nf">handleMethods</span><span class="p">(</span><span class="nx">verb</span> <span class="kt">rune</span><span class="p">)</span> <span class="p">(</span><span class="nx">handled</span> <span class="kt">bool</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">	<span class="k">if</span> <span class="nx">p</span><span class="p">.</span><span class="nx">erroring</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">		<span class="k">return</span>
+</span></span><span class="line"><span class="cl">	<span class="p">}</span>
+</span></span><span class="line"><span class="cl">	<span class="k">if</span> <span class="nx">verb</span> <span class="o">==</span> <span class="sc">&#39;w&#39;</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">		<span class="c1">// It is invalid to use %w other than with Errorf, more than once,
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>		<span class="c1">// or with a non-error arg.
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>		<span class="nx">err</span><span class="p">,</span> <span class="nx">ok</span> <span class="o">:=</span> <span class="nx">p</span><span class="p">.</span><span class="nx">arg</span><span class="p">.(</span><span class="kt">error</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">		<span class="k">if</span> <span class="p">!</span><span class="nx">ok</span> <span class="o">||</span> <span class="p">!</span><span class="nx">p</span><span class="p">.</span><span class="nx">wrapErrs</span> <span class="o">||</span> <span class="nx">p</span><span class="p">.</span><span class="nx">wrappedErr</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">			<span class="nx">p</span><span class="p">.</span><span class="nx">wrappedErr</span> <span class="p">=</span> <span class="kc">nil</span>
+</span></span><span class="line"><span class="cl">			<span class="nx">p</span><span class="p">.</span><span class="nx">wrapErrs</span> <span class="p">=</span> <span class="kc">false</span>
+</span></span><span class="line"><span class="cl">			<span class="nx">p</span><span class="p">.</span><span class="nf">badVerb</span><span class="p">(</span><span class="nx">verb</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">			<span class="k">return</span> <span class="kc">true</span>
+</span></span><span class="line"><span class="cl">		<span class="p">}</span>
+</span></span><span class="line"><span class="cl">		<span class="nx">p</span><span class="p">.</span><span class="nx">wrappedErr</span> <span class="p">=</span> <span class="nx">err</span>
+</span></span><span class="line"><span class="cl">		<span class="c1">// If the arg is a Formatter, pass &#39;v&#39; as the verb to it.
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>		<span class="nx">verb</span> <span class="p">=</span> <span class="sc">&#39;v&#39;</span>
+</span></span><span class="line"><span class="cl">	<span class="p">}</span>
+</span></span><span class="line"><span class="cl">  <span class="o">......</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>The code is not difficult, <code>handleMethods</code> when special handling <code>w</code>, use <code>wrapError</code> to wrap it</p>
+<h3 id="official-library-unwrap-implementation">Official library Unwrap implementation</h3>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-go" data-lang="go"><span class="line"><span class="cl"><span class="kd">func</span> <span class="nf">Unwrap</span><span class="p">(</span><span class="nx">err</span> <span class="kt">error</span><span class="p">)</span> <span class="kt">error</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">	<span class="nx">u</span><span class="p">,</span> <span class="nx">ok</span> <span class="o">:=</span> <span class="nx">err</span><span class="p">.(</span><span class="kd">interface</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">		<span class="nf">Unwrap</span><span class="p">()</span> <span class="kt">error</span>
+</span></span><span class="line"><span class="cl">	<span class="p">})</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">	<span class="k">if</span> <span class="p">!</span><span class="nx">ok</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">		<span class="k">return</span> <span class="kc">nil</span>
+</span></span><span class="line"><span class="cl">	<span class="p">}</span>
+</span></span><span class="line"><span class="cl">	<span class="k">return</span> <span class="nx">u</span><span class="p">.</span><span class="nf">Unwrap</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>is also called recursively, otherwise the interface assertion fails and returns <code>nil</code></p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-go" data-lang="go"><span class="line"><span class="cl"><span class="kd">type</span> <span class="nx">wrapError</span> <span class="kd">struct</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">	<span class="nx">msg</span> <span class="kt">string</span>
+</span></span><span class="line"><span class="cl">	<span class="nx">err</span> <span class="kt">error</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="kd">func</span> <span class="p">(</span><span class="nx">e</span> <span class="o">*</span><span class="nx">wrapError</span><span class="p">)</span> <span class="nf">Error</span><span class="p">()</span> <span class="kt">string</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">	<span class="k">return</span> <span class="nx">e</span><span class="p">.</span><span class="nx">msg</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="kd">func</span> <span class="p">(</span><span class="nx">e</span> <span class="o">*</span><span class="nx">wrapError</span><span class="p">)</span> <span class="nf">Unwrap</span><span class="p">()</span> <span class="kt">error</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">	<span class="k">return</span> <span class="nx">e</span><span class="p">.</span><span class="nx">err</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>The error structure generated during the preceding <code>fmt.Errof</code> is shown above, and <code>Unwrap</code> returns the underlying err directly</p>
+<h3 id="official-library-is-and-as-implementation">Official Library Is and As Implementation</h3>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-go" data-lang="go"><span class="line"><span class="cl"><span class="kd">func</span> <span class="nf">Is</span><span class="p">(</span><span class="nx">err</span><span class="p">,</span> <span class="nx">target</span> <span class="kt">error</span><span class="p">)</span> <span class="kt">bool</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">	<span class="k">if</span> <span class="nx">target</span> <span class="o">==</span> <span class="kc">nil</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">		<span class="k">return</span> <span class="nx">err</span> <span class="o">==</span> <span class="nx">target</span>
+</span></span><span class="line"><span class="cl">	<span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">	<span class="nx">isComparable</span> <span class="o">:=</span> <span class="nx">reflectlite</span><span class="p">.</span><span class="nf">TypeOf</span><span class="p">(</span><span class="nx">target</span><span class="p">).</span><span class="nf">Comparable</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl">	
+</span></span><span class="line"><span class="cl">	<span class="k">for</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">		<span class="k">if</span> <span class="nx">isComparable</span> <span class="o">&amp;&amp;</span> <span class="nx">err</span> <span class="o">==</span> <span class="nx">target</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">			<span class="k">return</span> <span class="kc">true</span>
+</span></span><span class="line"><span class="cl">		<span class="p">}</span>
+</span></span><span class="line"><span class="cl">		<span class="k">if</span> <span class="nx">x</span><span class="p">,</span> <span class="nx">ok</span> <span class="o">:=</span> <span class="nx">err</span><span class="p">.(</span><span class="kd">interface</span><span class="p">{</span> <span class="nf">Is</span><span class="p">(</span><span class="kt">error</span><span class="p">)</span> <span class="kt">bool</span> <span class="p">});</span> <span class="nx">ok</span> <span class="o">&amp;&amp;</span> <span class="nx">x</span><span class="p">.</span><span class="nf">Is</span><span class="p">(</span><span class="nx">target</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">			<span class="k">return</span> <span class="kc">true</span>
+</span></span><span class="line"><span class="cl">		<span class="p">}</span>
+</span></span><span class="line"><span class="cl">		<span class="k">if</span> <span class="nx">err</span> <span class="p">=</span> <span class="nf">Unwrap</span><span class="p">(</span><span class="nx">err</span><span class="p">);</span> <span class="nx">err</span> <span class="o">==</span> <span class="kc">nil</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">			<span class="k">return</span> <span class="kc">false</span>
+</span></span><span class="line"><span class="cl">		<span class="p">}</span>
+</span></span><span class="line"><span class="cl">	<span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p><code>Is</code> function is relatively simple, recursive layer by layer check, if it is nested err, then call <code>Unwrap</code> layer by layer to find the bottom err, and finally determine whether the pointers are equal</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-go" data-lang="go"><span class="line"><span class="cl"><span class="kd">var</span> <span class="nx">errorType</span> <span class="p">=</span> <span class="nx">reflectlite</span><span class="p">.</span><span class="nf">TypeOf</span><span class="p">((</span><span class="o">*</span><span class="kt">error</span><span class="p">)(</span><span class="kc">nil</span><span class="p">)).</span><span class="nf">Elem</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="kd">func</span> <span class="nf">As</span><span class="p">(</span><span class="nx">err</span> <span class="kt">error</span><span class="p">,</span> <span class="nx">target</span> <span class="kd">interface</span><span class="p">{})</span> <span class="kt">bool</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">	<span class="k">if</span> <span class="nx">target</span> <span class="o">==</span> <span class="kc">nil</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">		<span class="nb">panic</span><span class="p">(</span><span class="s">&#34;errors: target cannot be nil&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">	<span class="p">}</span>
+</span></span><span class="line"><span class="cl">	<span class="nx">val</span> <span class="o">:=</span> <span class="nx">reflectlite</span><span class="p">.</span><span class="nf">ValueOf</span><span class="p">(</span><span class="nx">target</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">	<span class="nx">typ</span> <span class="o">:=</span> <span class="nx">val</span><span class="p">.</span><span class="nf">Type</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl">	
+</span></span><span class="line"><span class="cl">	<span class="k">if</span> <span class="nx">typ</span><span class="p">.</span><span class="nf">Kind</span><span class="p">()</span> <span class="o">!=</span> <span class="nx">reflectlite</span><span class="p">.</span><span class="nx">Ptr</span> <span class="o">||</span> <span class="nx">val</span><span class="p">.</span><span class="nf">IsNil</span><span class="p">()</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">		<span class="nb">panic</span><span class="p">(</span><span class="s">&#34;errors: target must be a non-nil pointer&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">	<span class="p">}</span>
+</span></span><span class="line"><span class="cl">	
+</span></span><span class="line"><span class="cl">	<span class="k">if</span> <span class="nx">e</span> <span class="o">:=</span> <span class="nx">typ</span><span class="p">.</span><span class="nf">Elem</span><span class="p">();</span> <span class="nx">e</span><span class="p">.</span><span class="nf">Kind</span><span class="p">()</span> <span class="o">!=</span> <span class="nx">reflectlite</span><span class="p">.</span><span class="nx">Interface</span> <span class="o">&amp;&amp;</span> <span class="p">!</span><span class="nx">e</span><span class="p">.</span><span class="nf">Implements</span><span class="p">(</span><span class="nx">errorType</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">		<span class="nb">panic</span><span class="p">(</span><span class="s">&#34;errors: *target must be interface or implement error&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">	<span class="p">}</span>
+</span></span><span class="line"><span class="cl">	<span class="nx">targetType</span> <span class="o">:=</span> <span class="nx">typ</span><span class="p">.</span><span class="nf">Elem</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl">	<span class="k">for</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">		<span class="k">if</span> <span class="nx">reflectlite</span><span class="p">.</span><span class="nf">TypeOf</span><span class="p">(</span><span class="nx">err</span><span class="p">).</span><span class="nf">AssignableTo</span><span class="p">(</span><span class="nx">targetType</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">			<span class="nx">val</span><span class="p">.</span><span class="nf">Elem</span><span class="p">().</span><span class="nf">Set</span><span class="p">(</span><span class="nx">reflectlite</span><span class="p">.</span><span class="nf">ValueOf</span><span class="p">(</span><span class="nx">err</span><span class="p">))</span>
+</span></span><span class="line"><span class="cl">			<span class="k">return</span> <span class="kc">true</span>
+</span></span><span class="line"><span class="cl">		<span class="p">}</span>
+</span></span><span class="line"><span class="cl">		<span class="k">if</span> <span class="nx">x</span><span class="p">,</span> <span class="nx">ok</span> <span class="o">:=</span> <span class="nx">err</span><span class="p">.(</span><span class="kd">interface</span><span class="p">{</span> <span class="nf">As</span><span class="p">(</span><span class="kd">interface</span><span class="p">{})</span> <span class="kt">bool</span> <span class="p">});</span> <span class="nx">ok</span> <span class="o">&amp;&amp;</span> <span class="nx">x</span><span class="p">.</span><span class="nf">As</span><span class="p">(</span><span class="nx">target</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">			<span class="k">return</span> <span class="kc">true</span>
+</span></span><span class="line"><span class="cl">		<span class="p">}</span>
+</span></span><span class="line"><span class="cl">		<span class="nx">err</span> <span class="p">=</span> <span class="nf">Unwrap</span><span class="p">(</span><span class="nx">err</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">	<span class="p">}</span>
+</span></span><span class="line"><span class="cl">	<span class="k">return</span> <span class="kc">false</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>It also recursively calls <code>As</code>, while <code>Unwrap</code> the bottom error, and then uses reflection to determine if the assignment is possible, and if it is, then it is of the same type</p>
+<h2 id="errgroup-use">ErrGroup Use</h2>
+<p>When it comes to error, we must mention <code>golang.org/x/sync/errgroup</code>, for the following scenario: <strong>in a concurrency scenario, if a goroutine has an error, then it should return early and cancel other parallel requests</strong></p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-go" data-lang="go"><span class="line"><span class="cl"><span class="kd">func</span> <span class="nf">ExampleGroup_justErrors</span><span class="p">()</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">	<span class="nx">g</span> <span class="o">:=</span> <span class="nb">new</span><span class="p">(</span><span class="nx">errgroup</span><span class="p">.</span><span class="nx">Group</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">	<span class="kd">var</span> <span class="nx">urls</span> <span class="p">=</span> <span class="p">[]</span><span class="kt">string</span><span class="p">{</span>
+</span></span><span class="line"><span class="cl">		<span class="s">&#34;http://www.golang.org/&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">		<span class="s">&#34;http://www.google.com/&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">		<span class="s">&#34;http://www.somestupidname.com/&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">	<span class="p">}</span>
+</span></span><span class="line"><span class="cl">	<span class="k">for</span> <span class="nx">_</span><span class="p">,</span> <span class="nx">url</span> <span class="o">:=</span> <span class="k">range</span> <span class="nx">urls</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">		<span class="c1">// Launch a goroutine to fetch the URL.
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>		<span class="nx">url</span> <span class="o">:=</span> <span class="nx">url</span> <span class="c1">// https://golang.org/doc/faq#closures_and_goroutines
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>		<span class="nx">g</span><span class="p">.</span><span class="nf">Go</span><span class="p">(</span><span class="kd">func</span><span class="p">()</span> <span class="kt">error</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">			<span class="c1">// Fetch the URL.
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>			<span class="nx">resp</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">http</span><span class="p">.</span><span class="nf">Get</span><span class="p">(</span><span class="nx">url</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">			<span class="k">if</span> <span class="nx">err</span> <span class="o">==</span> <span class="kc">nil</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">				<span class="nx">resp</span><span class="p">.</span><span class="nx">Body</span><span class="p">.</span><span class="nf">Close</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl">			<span class="p">}</span>
+</span></span><span class="line"><span class="cl">			<span class="k">return</span> <span class="nx">err</span>
+</span></span><span class="line"><span class="cl">		<span class="p">})</span>
+</span></span><span class="line"><span class="cl">	<span class="p">}</span>
+</span></span><span class="line"><span class="cl">	<span class="c1">// Wait for all HTTP fetches to complete.
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>	<span class="k">if</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">g</span><span class="p">.</span><span class="nf">Wait</span><span class="p">();</span> <span class="nx">err</span> <span class="o">==</span> <span class="kc">nil</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">		<span class="nx">fmt</span><span class="p">.</span><span class="nf">Println</span><span class="p">(</span><span class="s">&#34;Successfully fetched all URLs.&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">	<span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>Above is the official example given, the underlying use of context to cancel other requests, synchronization using WaitGroup, the principle is very simple, the amount of code is very small, interested in the source code can see</p>
+<p>Three points must be noted here:</p>
+<ul>
+<li>Who passed in the <code>context</code>? Other code will not be used, cancel can only be executed once</li>
+<li><code>g.Go</code> does not come with recover, for the robustness of the program, you must recover</li>
+<li>parallel goroutine returns with an error instead of collecting results after a normal fan-out request</li>
+</ul>
+<h2 id="a-few-issues-to-note-in-online-practice">A few issues to note in online practice</h2>
+<h3 id="error-and-panic">error and panic</h3>
+<p>If you look at the go source code, you will find that there are many places to write panic in the source code, but in engineering practice, especially the business code should not actively write panic
+Theoretically, panic only exists in the server startup phase, such as config file parsing failure, port listening failure, etc. <strong>All business logic is prohibited to actively panic</strong>.</p>
+<p>According to the <code>CAP</code> theory, the most important thing on the web Internet is AP, high availability is the most critical (non-banking financial scenario), if there is a part of the word list, metadata loading failure when the program starts, can not panic, to provide services is the most critical, of course, to have an alarm, so that the development of the first time to perceive the current service QOS has been reduced. All asynchronous goroutine are to use <code>recover</code> to underwrite the processing</p>
+<h3 id="error-handling-and-resource-release">error handling and resource release</h3>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span><span class="lnt">8
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-go" data-lang="go"><span class="line"><span class="cl"><span class="kd">func</span> <span class="nf">worker</span><span class="p">(</span><span class="nx">done</span> <span class="kd">chan</span> <span class="kt">error</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="nx">err</span> <span class="o">:=</span> <span class="nf">doSomething</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl">    <span class="nx">result</span> <span class="o">:=</span> <span class="o">&amp;</span><span class="nx">result</span><span class="p">{}</span>
+</span></span><span class="line"><span class="cl">    <span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="nx">result</span><span class="p">.</span><span class="nx">Err</span> <span class="p">=</span> <span class="nx">err</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}</span>
+</span></span><span class="line"><span class="cl">    <span class="nx">done</span> <span class="o">&lt;-</span> <span class="nx">result</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>General asynchronous assembly of data, we have to start the goroutine separately, and then return the results through the channel, the result structure has an err field to indicate the error</p>
+<p>Note here that the done channel in the main function must not be closed, because you do not know how long doSomething will time out and return, write closed channel directly panic</p>
+<p>So here is a guideline: <strong>data transfer and exit control, you need to use a separate channel can not be mixed, we generally use context to cancel the asynchronous goroutine, rather than directly close channels</strong></p>
+<h3 id="error-cascade-usage-issues">error Cascade usage issues</h3>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span><span class="lnt">31
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-go" data-lang="go"><span class="line"><span class="cl"><span class="kn">package</span> <span class="nx">main</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="kn">import</span> <span class="s">&#34;fmt&#34;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="kd">type</span> <span class="nx">myError</span> <span class="kd">struct</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">	<span class="kt">string</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="kd">func</span> <span class="p">(</span><span class="nx">i</span> <span class="o">*</span><span class="nx">myError</span><span class="p">)</span> <span class="nf">Error</span><span class="p">()</span> <span class="kt">string</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">	<span class="k">return</span> <span class="nx">i</span><span class="p">.</span><span class="kt">string</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="kd">func</span> <span class="nf">Call1</span><span class="p">()</span> <span class="kt">error</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">	<span class="k">return</span> <span class="kc">nil</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="kd">func</span> <span class="nf">Call2</span><span class="p">()</span> <span class="o">*</span><span class="nx">myError</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">	<span class="k">return</span> <span class="kc">nil</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="kd">func</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">	<span class="nx">err</span> <span class="o">:=</span> <span class="nf">Call1</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl">	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">		<span class="nx">fmt</span><span class="p">.</span><span class="nf">Printf</span><span class="p">(</span><span class="s">&#34;call1 is not nil: %v\n&#34;</span><span class="p">,</span> <span class="nx">err</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">	<span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">	<span class="nx">err</span> <span class="p">=</span> <span class="nf">Call2</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl">	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">		<span class="nx">fmt</span><span class="p">.</span><span class="nf">Printf</span><span class="p">(</span><span class="s">&#34;call2 err is not nil: %v\n&#34;</span><span class="p">,</span> <span class="nx">err</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">	<span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>This is a very classic problem. If the error returned by <code>Call2()</code> is a custom type when the err variable is reused, the err type is different, resulting in the classic <strong>error is not nil, but value is nil</strong>. The very classic Nil is not nil problem. The solution is <code>Call2()</code> err to redefine a variable, but of course the easiest way is to unify the error type. A bit difficult, especially for large projects</p>
+<h3 id="concurrency-issues">concurrency issues</h3>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-go" data-lang="go"><span class="line"><span class="cl"><span class="kn">package</span> <span class="nx">main</span>
+</span></span><span class="line"><span class="cl"><span class="kn">import</span> <span class="p">(</span>
+</span></span><span class="line"><span class="cl">   <span class="s">&#34;fmt&#34;</span>
+</span></span><span class="line"><span class="cl">   <span class="s">&#34;github.com/myteksi/hystrix-go/hystrix&#34;</span>
+</span></span><span class="line"><span class="cl">   <span class="s">&#34;time&#34;</span>
+</span></span><span class="line"><span class="cl"><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="kd">var</span> <span class="nx">FIRST</span> <span class="kt">error</span> <span class="p">=</span> <span class="nx">hystrix</span><span class="p">.</span><span class="nx">CircuitError</span><span class="p">{</span><span class="nx">Message</span><span class="p">:</span><span class="s">&#34;timeout&#34;</span><span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="kd">var</span> <span class="nx">SECOND</span> <span class="kt">error</span> <span class="p">=</span> <span class="kc">nil</span>
+</span></span><span class="line"><span class="cl"><span class="kd">func</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">   <span class="kd">var</span> <span class="nx">err</span> <span class="kt">error</span>
+</span></span><span class="line"><span class="cl">   <span class="k">go</span> <span class="kd">func</span><span class="p">()</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">      <span class="nx">i</span> <span class="o">:=</span> <span class="mi">1</span>
+</span></span><span class="line"><span class="cl">      <span class="k">for</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">         <span class="nx">i</span> <span class="p">=</span> <span class="mi">1</span> <span class="o">-</span> <span class="nx">i</span>
+</span></span><span class="line"><span class="cl">         <span class="k">if</span> <span class="nx">i</span> <span class="o">==</span> <span class="mi">0</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">            <span class="nx">err</span> <span class="p">=</span> <span class="nx">FIRST</span>
+</span></span><span class="line"><span class="cl">         <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">            <span class="nx">err</span> <span class="p">=</span> <span class="nx">SECOND</span>
+</span></span><span class="line"><span class="cl">         <span class="p">}</span>
+</span></span><span class="line"><span class="cl">         <span class="nx">time</span><span class="p">.</span><span class="nf">Sleep</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">      <span class="p">}</span>
+</span></span><span class="line"><span class="cl">   <span class="p">}()</span>
+</span></span><span class="line"><span class="cl">   <span class="k">for</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">      <span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">         <span class="nx">fmt</span><span class="p">.</span><span class="nf">Println</span><span class="p">(</span><span class="nx">err</span><span class="p">.</span><span class="nf">Error</span><span class="p">())</span>
+</span></span><span class="line"><span class="cl">      <span class="p">}</span>
+</span></span><span class="line"><span class="cl">      <span class="nx">time</span><span class="p">.</span><span class="nf">Sleep</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">   <span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>Before running, what do you guess will happen?</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl">error.demo$ go run panic.go
+</span></span><span class="line"><span class="cl">hystrix: timeout
+</span></span><span class="line"><span class="cl">panic: value method github.com/myteksi/hystrix-go/hystrix.CircuitError.Error called using nil *CircuitError pointer
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">goroutine <span class="m">1</span> <span class="o">[</span>running<span class="o">]</span>:
+</span></span><span class="line"><span class="cl">github.com/myteksi/hystrix-go/hystrix.<span class="o">(</span>*CircuitError<span class="o">)</span>.Error<span class="o">(</span>0x0, 0xc0000f4008, 0xc000088f40<span class="o">)</span>
+</span></span><span class="line"><span class="cl"> &lt;autogenerated&gt;:1 +0x86
+</span></span><span class="line"><span class="cl">main.main<span class="o">()</span>
+</span></span><span class="line"><span class="cl"> /Users/zerun.dong/code/gotest/panic.go:25 +0x82
+</span></span><span class="line"><span class="cl"><span class="nb">exit</span> status <span class="m">2</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>The above is a test example, as long as it runs for a while, a panic must occur, the essence is that the error interface type is not concurrency-safe</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-go" data-lang="go"><span class="line"><span class="cl"><span class="c1">// Interfaces without method
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="kd">type</span> <span class="nx">eface</span> <span class="kd">struct</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="nx">_type</span> <span class="o">*</span><span class="nx">_type</span>
+</span></span><span class="line"><span class="cl">    <span class="nx">data</span>  <span class="nx">unsafe</span><span class="p">.</span><span class="nx">Pointer</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="c1">// Interfaces with method
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="kd">type</span> <span class="nx">iface</span> <span class="kd">struct</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="nx">tab</span>  <span class="o">*</span><span class="nx">itab</span>
+</span></span><span class="line"><span class="cl">    <span class="nx">data</span> <span class="nx">unsafe</span><span class="p">.</span><span class="nx">Pointer</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p><strong>So don&rsquo;t concurrently assign values to error</strong></p>
+<h3 id="to-ignore-or-not-to-ignore-error">to ignore or not to ignore error</h3>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-go" data-lang="go"><span class="line"><span class="cl"><span class="kd">func</span> <span class="nf">Test</span><span class="p">(){</span>
+</span></span><span class="line"><span class="cl">	<span class="nx">_</span> <span class="p">=</span> <span class="nx">json</span><span class="p">.</span><span class="nf">Marshal</span><span class="p">(</span><span class="nx">xxxx</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">	<span class="o">......</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>Some people will have questions, error must be handled? In fact, the above <code>Marshal</code> may fail, if replaced by other functions, the current implementation can be ignored, there is no guarantee that the logic is still compatible later, must deal with error, at least to print the log</p>
+<h3 id="errwriter">errWriter</h3>
+<p>This example is from the official blog, sometimes we want to do pipeline processing and need to treat err as a structure variable</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-go" data-lang="go"><span class="line"><span class="cl"><span class="nx">_</span><span class="p">,</span> <span class="nx">err</span> <span class="p">=</span> <span class="nx">fd</span><span class="p">.</span><span class="nf">Write</span><span class="p">(</span><span class="nx">p0</span><span class="p">[</span><span class="nx">a</span><span class="p">:</span><span class="nx">b</span><span class="p">])</span>
+</span></span><span class="line"><span class="cl"><span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="k">return</span> <span class="nx">err</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="nx">_</span><span class="p">,</span> <span class="nx">err</span> <span class="p">=</span> <span class="nx">fd</span><span class="p">.</span><span class="nf">Write</span><span class="p">(</span><span class="nx">p1</span><span class="p">[</span><span class="nx">c</span><span class="p">:</span><span class="nx">d</span><span class="p">])</span>
+</span></span><span class="line"><span class="cl"><span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="k">return</span> <span class="nx">err</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="nx">_</span><span class="p">,</span> <span class="nx">err</span> <span class="p">=</span> <span class="nx">fd</span><span class="p">.</span><span class="nf">Write</span><span class="p">(</span><span class="nx">p2</span><span class="p">[</span><span class="nx">e</span><span class="p">:</span><span class="nx">f</span><span class="p">])</span>
+</span></span><span class="line"><span class="cl"><span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="k">return</span> <span class="nx">err</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="c1">// and so on
+</span></span></span></code></pre></td></tr></table>
+</div>
+</div><p>The above is the original example, you need to keep doing <code>if err ! = nil</code>, the official optimization is written as follows</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-go" data-lang="go"><span class="line"><span class="cl"><span class="kd">type</span> <span class="nx">errWriter</span> <span class="kd">struct</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="nx">w</span>   <span class="nx">io</span><span class="p">.</span><span class="nx">Writer</span>
+</span></span><span class="line"><span class="cl">    <span class="nx">err</span> <span class="kt">error</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="kd">func</span> <span class="p">(</span><span class="nx">ew</span> <span class="o">*</span><span class="nx">errWriter</span><span class="p">)</span> <span class="nf">write</span><span class="p">(</span><span class="nx">buf</span> <span class="p">[]</span><span class="kt">byte</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="k">if</span> <span class="nx">ew</span><span class="p">.</span><span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="k">return</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}</span>
+</span></span><span class="line"><span class="cl">    <span class="nx">_</span><span class="p">,</span> <span class="nx">ew</span><span class="p">.</span><span class="nx">err</span> <span class="p">=</span> <span class="nx">ew</span><span class="p">.</span><span class="nx">w</span><span class="p">.</span><span class="nf">Write</span><span class="p">(</span><span class="nx">buf</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1">// using
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="nx">ew</span> <span class="o">:=</span> <span class="o">&amp;</span><span class="nx">errWriter</span><span class="p">{</span><span class="nx">w</span><span class="p">:</span> <span class="nx">fd</span><span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="nx">ew</span><span class="p">.</span><span class="nf">write</span><span class="p">(</span><span class="nx">p0</span><span class="p">[</span><span class="nx">a</span><span class="p">:</span><span class="nx">b</span><span class="p">])</span>
+</span></span><span class="line"><span class="cl"><span class="nx">ew</span><span class="p">.</span><span class="nf">write</span><span class="p">(</span><span class="nx">p1</span><span class="p">[</span><span class="nx">c</span><span class="p">:</span><span class="nx">d</span><span class="p">])</span>
+</span></span><span class="line"><span class="cl"><span class="nx">ew</span><span class="p">.</span><span class="nf">write</span><span class="p">(</span><span class="nx">p2</span><span class="p">[</span><span class="nx">e</span><span class="p">:</span><span class="nx">f</span><span class="p">])</span>
+</span></span><span class="line"><span class="cl"><span class="c1">// and so on
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="k">if</span> <span class="nx">ew</span><span class="p">.</span><span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="k">return</span> <span class="nx">ew</span><span class="p">.</span><span class="nx">err</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h3 id="when-to-print-the-call-stack">when to print the call stack</h3>
+<p>The official library cannot wrap the call stack, so <code>fmt.Errorf %w</code> is not as practical as the <code>pkg/errors</code> library, but <code>errors.Wrap</code> is best to ensure that it is called only once, otherwise it is a duplicate call stack. The use case of our project is log error level printing stack, warn and info are not printed, of course case by case also depends on the actual use case</p>
+<h3 id="make-judgments-before-wrap">make judgments before Wrap</h3>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-go" data-lang="go"><span class="line"><span class="cl"><span class="nx">errors</span><span class="p">.</span><span class="nf">Wrap</span><span class="p">(</span><span class="nx">err</span><span class="p">,</span> <span class="s">&#34;failed&#34;</span><span class="p">)</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>By looking at the source code, if err is nil, it will also return nil. So it is better to make a judgment before <code>Wrap</code>.</p>
+
+    </div>
+
+    
+    
+
+
+    
+    
+
+    <footer class="post-footer">
+      <div class="post-tags">
+          <a href="https://www.golangi.net/tags/golang/">golang</a>
+          <a href="https://www.golangi.net/tags/error/">error</a>
+          <a href="https://www.golangi.net/tags/panic/">panic</a>
+          <a href="https://www.golangi.net/tags/errorgroup/">ErrorGroup&#34;</a>
+          <a href="https://www.golangi.net/tags/wrap/">wrap</a>
+          
+        </div>
+
+      
+      <nav class="post-nav">
+        
+        
+          <a class="next" href="/post/how-to-use-the-go-timer/">
+            <span class="next-text nav-default">How to Use the Go Timer</span>
+            <span class="prev-text nav-mobile">Next</span>
+            
+            <i class="iconfont">
+              <svg class="icon" viewBox="0 0 1024 1024" version="1.1"
+  xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
+  width="18" height="18">
+  <path d="M332.091514 74.487481l-75.369571 89.491197c-10.963703 12.998035-10.285251 32.864502 1.499144 44.378743l286.278095 300.375162L266.565125 819.058374c-11.338233 12.190647-11.035334 32.285311 0.638543 44.850487l80.46666 86.564541c11.680017 12.583596 30.356378 12.893658 41.662889 0.716314l377.434212-421.426145c11.332093-12.183484 11.041474-32.266891-0.657986-44.844348l-80.46666-86.564541c-1.772366-1.910513-3.706415-3.533476-5.750981-4.877077L373.270379 71.774697C361.493148 60.273758 343.054193 61.470003 332.091514 74.487481z"></path>
+</svg>
+
+            </i>
+          </a>
+      </nav>
+    </footer>
+  </article>
+
+  
+  
+
+  
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+    
+
+  
+
+        </div>
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="icon-links">
+  
+
+
+<a href="https://www.golangi.net/index.xml" rel="noopener alternate" type="application/rss&#43;xml"
+    class="iconfont" title="rss" target="_blank">
+    <svg class="icon" viewBox="0 0 1024 1024" version="1.1"
+  xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
+  width="30" height="30">
+  <path d="M819.157333 1024C819.157333 574.592 449.408 204.8 0 204.8V0c561.706667 0 1024 462.293333 1024 1024h-204.842667zM140.416 743.04a140.8 140.8 0 0 1 140.501333 140.586667A140.928 140.928 0 0 1 140.074667 1024C62.72 1024 0 961.109333 0 883.626667s62.933333-140.544 140.416-140.586667zM678.784 1024h-199.04c0-263.210667-216.533333-479.786667-479.744-479.786667V345.173333c372.352 0 678.784 306.517333 678.784 678.826667z"></path>
+</svg>
+
+  </a>
+   
+</div>
+
+<div class="copyright">
+  <span class="power-by">
+    Powered by <a class="hexo-link" href="https://gohugo.io">Hugo</a>
+  </span>
+  <span class="division">|</span>
+  <span class="theme-info">
+    Theme - <a class="theme-link" href="https://github.com/xianmin/hugo-theme-jane">Jane</a>
+  </span>
+
+  <span class="copyright-year">
+    &copy;
+    2022
+    <span class="heart">
+      
+      <i class="iconfont">
+        <svg class="icon" viewBox="0 0 1025 1024" version="1.1"
+  xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
+  width="14" height="14">
+  <path d="M1000.1 247.9c-15.5-37.3-37.6-70.6-65.7-98.9-54.4-54.8-125.8-85-201-85-85.7 0-166 39-221.4 107.4C456.6 103 376.3 64 290.6 64c-75.1 0-146.5 30.4-201.1 85.6-28.2 28.5-50.4 61.9-65.8 99.3-16 38.8-24 79.9-23.6 122.2 0.7 91.7 40.1 177.2 108.1 234.8 3.1 2.6 6 5.1 8.9 7.8 14.9 13.4 58 52.8 112.6 102.7 93.5 85.5 209.9 191.9 257.5 234.2 7 6.1 15.8 9.5 24.9 9.5 9.2 0 18.1-3.4 24.9-9.5 34.5-30.7 105.8-95.9 181.4-165 74.2-67.8 150.9-138 195.8-178.2 69.5-57.9 109.6-144.4 109.9-237.3 0.1-42.5-8-83.6-24-122.2z"
+   fill="#8a8a8a"></path>
+</svg>
+
+      </i>
+    </span><span class="author">
+        Golang island
+        
+      </span></span>
+
+  
+  
+
+  
+</div>
+
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont">
+        
+        <svg class="icon" viewBox="0 0 1024 1024" version="1.1"
+  xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
+  width="35" height="35">
+  <path d="M510.866688 227.694839 95.449397 629.218702l235.761562 0-2.057869 328.796468 362.40389 0L691.55698 628.188232l241.942331-3.089361L510.866688 227.694839zM63.840492 63.962777l894.052392 0 0 131.813095L63.840492 195.775872 63.840492 63.962777 63.840492 63.962777zM63.840492 63.962777"></path>
+</svg>
+
+      </i>
+    </div>
+  </div>
+  
+<script type="text/javascript" src="/lib/jquery/jquery-3.2.1.min.js"></script>
+  <script type="text/javascript" src="/lib/slideout/slideout-1.0.1.min.js"></script>
+
+
+
+
+<script type="text/javascript" src="/js/main.dee43230127a73d039a734510fa896c89c3c7ce0cf0be0c7a7433f8fd69b76dc.js" integrity="sha256-3uQyMBJ6c9A5pzRRD6iWyJw8fODPC&#43;DHp0M/j9abdtw=" crossorigin="anonymous"></script>
+
+
+
+  <script type="text/javascript">
+    window.MathJax = {
+      showProcessingMessages: false,
+      messageStyle: 'none'
+    };
+  </script>
+  <script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.4/MathJax.js?config=TeX-MML-AM_CHTML' async></script>
+
+
+
+
+
+
+
+
+
+  
+    <script type="text/javascript" src="/js/load-photoswipe.js"></script>
+    <script type="text/javascript" src="/lib/photoswipe/photoswipe.min.js"></script>
+    <script type="text/javascript" src="/lib/photoswipe/photoswipe-ui-default.min.js"></script>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</body>
+</html>
